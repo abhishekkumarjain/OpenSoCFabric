@@ -1,40 +1,51 @@
 package OpenSoC
 
 import Chisel._
-	
+import scala.collection.mutable.ArrayBuffer
+
 object OpenSoC {
-    def main(args: Array[String]): Unit = {
-		val mySWargs = Array("--backend", "c", "--genHarness", "--compile", "--parallelMakeJobs", "-1", "--compileInitializationUnoptimized", "--lineLimitFunctions", "1024", "--minimumLinesPerFile", "32768", "--test", "--Wall", "--vcd", "--reportDims")//, "--debug", "--ioDebug")
-		val myHWargs = Array("--backend", "v", "--genHarness", "--vcd")
-		var parms = Parameters.empty
+  def main(args: Array[String]): Unit = {
+    val mySWargs = Array("--backend", "c", "--genHarness", "--compile", "--test", "--Wall", "--vcd", "--reportDims")//, "--debug", "--ioDebug")
+    val myHWargs = Array("--backend", "v", "--genHarness", "--vcd")
+    var parms = Parameters.empty
+    val extargs = ArrayBuffer[String]()
+    var rpd = 2 // Routers per dimension.
+    val Dim = 2 // Dimension of topology
+    val C = 1 // Processors (endpoints) per router.
+    val numVCs = 1 // Number of Virtual Channels
+    var mySHargs : Array[String] = Array() 
+    var harnessName : String = ""
+    var moduleName  : String = ""
+    var injRate :Double = 1.0
 
-		val Dim = 2 // Dimension of topology
-		val K = Vector(2, 2) // Routers per dimension.
-		val C = 1 // Processors (endpoints) per router.
-		val numVCs = 1 // Number of Virtual Channels
-		
-		val numPortsCMesh = Dim*2+C
-        var injRate :Double = 1.0
-		val numPortsCFlatBfly = K.sum - Dim + C
-		val numPorts = numPortsCMesh
-		var harnessName : String = ""
-		var moduleName  : String = ""
-        var myargs : Array[String] = Array() 
-		var moduleToTest : () => Chisel.Module = () => Chisel.Module(new MuxN[UInt](UInt(width=32),
-													parms.child("MyMux", Map(("n"->Soft(4))))
-													))
-		args.sliding(2).foreach(arg =>
-			arg(0) match {
-				case "--harnessName"    => (harnessName = arg(1))
-				case "--moduleName"     => (moduleName = arg(1))
-                case "--injRate"        => (injRate = arg(1).toDouble)
-                case "--sw"             => (myargs = mySWargs)
-                case "--hw"             => (myargs = myHWargs) 
-				case _ => Nil
-			}
-		)
-		printf("Harness: %s Module: %s\n", harnessName, moduleName)
-
+    args.sliding(2).foreach(arg =>
+      arg(0) match {
+        case "--harnessName"    => (harnessName = arg(1))
+        case "--moduleName"     => (moduleName = arg(1))
+        case "--injRate"        => (injRate = arg(1).toDouble)
+        case "--sw"             => (mySHargs = mySWargs)
+        case "--hw"             => (mySHargs = myHWargs)
+        case "--rpd"            => (rpd = arg(1).toInt)
+        case _ if arg(0).startsWith("--") => {
+          // Should we ignore the dummy second argument?
+      	  if (arg(1) == "_") {
+            extargs += arg(0)
+          } else {
+            extargs += arg(0); extargs += arg(1)
+          }
+        }
+        case _ => Nil
+      }
+    )
+    printf("Harness: %s Module: %s\n", harnessName, moduleName)
+    val myargs: Array[String] = mySHargs ++ extargs
+    val K = Vector(rpd, rpd) // Routers per dimension.
+    val numPortsCMesh = Dim*2+C
+    val numPortsCFlatBfly = K.sum - Dim + C
+    val numPorts = numPortsCMesh
+    var moduleToTest : () => Chisel.Module = () => Chisel.Module(new MuxN[UInt](UInt(width=32),
+                          parms.child("MyMux", Map(("n"->Soft(4))))
+                          ))
 		def MakePacketChannel (parms: Parameters) : PacketChannel = {
 			val channel = new PacketChannel(parms)
 			channel
