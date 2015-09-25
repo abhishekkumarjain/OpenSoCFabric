@@ -1,10 +1,10 @@
 SBT		?= sbt
-SBT_FLAGS	?= -Dsbt.log.noformat=true
+SBT_FLAGS	?= -Dsbt.log.noformat=true -DchiselVersion=2.3-SNAPSHOT
 TARGETDIR ?= ./target
 # The following need to be specified as pairs due to OpenSoC's argument parsing
 # The arguments that are really Chisel booleans will ignore the second (dummy) value
 SPECIAL_CHISEL_FLAGS ?= --parallelMakeJobs -1 --compileInitializationUnoptimized - --lineLimitFunctions 1024 --minimumLinesPerFile 32768 --targetDir $(TARGETDIR)
-OPENSOC_FLAGS	?= --sw true --harnessName OpenSoC_CMeshTester_Random --moduleName OpenSoC_CMesh_Flit
+OPENSOC_FLAGS	?= --harnessName OpenSoC_CMeshTester_Random --moduleName OpenSoC_CMesh_Flit
 
 .PHONY:	smoke publish-local check clean jenkins-build
 
@@ -17,7 +17,8 @@ publish-local:
 	$(SBT) $(SBT_FLAGS) publish-local
 
 check:
-	$(SBT) $(SBT_FLAGS) "run $(OPENSOC_FLAGS) $(SPECIAL_CHISEL_FLAGS)"
+	$(SBT) $(SBT_FLAGS) "run --hw true $(OPENSOC_FLAGS) $(SPECIAL_CHISEL_FLAGS)"
+	$(SBT) $(SBT_FLAGS) "run --sw true $(OPENSOC_FLAGS) $(SPECIAL_CHISEL_FLAGS)"
 
 clean:
 	$(SBT) $(SBT_FLAGS) clean
