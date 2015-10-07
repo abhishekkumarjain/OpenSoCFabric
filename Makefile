@@ -1,5 +1,6 @@
+chiselVersion	?= 2.3-SNAPSHOT
 SBT		?= sbt
-SBT_FLAGS	?= -Dsbt.log.noformat=true -DchiselVersion=2.3-SNAPSHOT
+SBT_FLAGS	?= -Dsbt.log.noformat=true -DchiselVersion=$(chiselVersion)
 TARGETDIR ?= ./target
 # The following need to be specified as pairs due to OpenSoC's argument parsing
 # The arguments that are really Chisel booleans will ignore the second (dummy) value
