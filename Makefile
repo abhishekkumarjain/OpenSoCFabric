@@ -11,7 +11,7 @@ TARGETDIR ?= ./target
 # The following need to be specified as pairs due to OpenSoC's argument parsing
 # The arguments that are really Chisel booleans will ignore the second (dummy) value
 SPECIAL_CHISEL_FLAGS ?= --parallelMakeJobs -1 --compileInitializationUnoptimized - --lineLimitFunctions 1024 --minimumLinesPerFile 32768 --targetDir $(TARGETDIR)
-OPENSOC_FLAGS	?= --harnessName OpenSoC_CMeshTester_Random --moduleName OpenSoC_CMesh_Flit
+OPENSOC_FLAGS	?= --harnessName OpenSoC_CMeshTester_Random_VarInjRate --moduleName OpenSoC_CMesh_Flit
 
 .PHONY:	smoke publish-local check clean jenkins-build
 

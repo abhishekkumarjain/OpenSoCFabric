@@ -35,10 +35,11 @@ class InputPacketInterface[T <: Data](parms: Parameters, tGen : Parameters => T)
 	
 	io.in.ready 					:= packet2Flit.io.packetReady
 	packet2Flit.io.packet 			:= io.in.bits
-	packet2Flit.io.packetValid 		:= io.in.valid
+	packet2Flit.io.packetValid 		:= io.in.valid 
 	
 	creditCon.io.inCredit <> io.out.credit
 	io.out.flit := packet2Flit.io.flit
-	creditCon.io.inValid := packet2Flit.io.flitValid
+	creditCon.io.inConsume := packet2Flit.io.flitValid
+	io.out.flitValid := packet2Flit.io.flitValid
 	packet2Flit.io.flitReady := creditCon.io.outCredit
 }

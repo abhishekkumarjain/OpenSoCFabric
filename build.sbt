@@ -1,8 +1,8 @@
 // Name of Organization
-organization := "gov.lbl.crd.ftg"
+organization := "gov.lbl.crd.csd.cag"
 
 // Version number of project
-version := "1.0"
+version := "1.1"
 
 // Project Name
 name := "OpenSoC"
