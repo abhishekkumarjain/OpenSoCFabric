@@ -49,8 +49,8 @@ object OpenSoC {
                 case "--packetCount"    => (packetCount = arg(1).toInt)
                 case "--traceFilename"   => (traceFilename = arg(1))
                 case "--fragFactor"     => (fragmentationFactor = arg(1).toInt)
-        case "--targetDir" => myargs = myargs ++ Array(arg(0), arg(1))
-        case _ => Nil
+				case "--targetDir" => myargs = myargs ++ Array(arg(0), arg(1))
+				case _ => Nil
 			}
 		)
 		
