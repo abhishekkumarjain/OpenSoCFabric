@@ -47,10 +47,10 @@ class Packet (parms: Parameters) extends Bundle {
 	val packetCommandFieldCount = 3
 	val	sourceAddress			= UInt(INPUT, width = packetWidth)
 	val	destAddress				= UInt(INPUT, width = packetWidth)
-	val	length					= Vec.fill(packetLengthFieldCount) { UInt(INPUT, width=packetWidth) }
-	val	command					= Vec.fill(packetCommandFieldCount){ UInt(INPUT, width = packetWidth) }
+	val	length					= Vec(packetLengthFieldCount, UInt(INPUT, width=packetWidth) )
+	val	command					= Vec(packetCommandFieldCount, UInt(INPUT, width = packetWidth) )
 	val debug					= UInt(INPUT, width = packetWidth)
-	val	payload					= Vec.fill(packetLength - packetControlFieldCount){ UInt(INPUT, width = packetWidth) }
+	val	payload					= Vec(packetLength - packetControlFieldCount, UInt(INPUT, width = packetWidth) )
 
 	override def cloneType = { new Packet(parms).asInstanceOf[this.type] }
 }

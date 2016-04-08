@@ -11,8 +11,8 @@ abstract class NetworkInterfaceParams {
 abstract class NetworkInterface extends Module {
 	val io = new Bundle {
 		val AXIPort = new AXI()
-		val OutChannels = Vec.fill(NumChanPerEnd) {new Channel()}
-		val InChannels = Vec.fill(NumChanPerEnd) {new Channel()}
+		val OutChannels = Vec(NumChanPerEnd, new Channel())
+		val InChannels = Vec(NumChanPerEnd, new Channel())
 	}
 }
 */

@@ -43,9 +43,9 @@ abstract class Router(parms: Parameters) extends Module(parms) {
 	val numInChannels 	= parms.get[Int]("numInChannels")
 	val numOutChannels 	= parms.get[Int]("numOutChannels")
 	val io = new Bundle {
-		val inChannels = Vec.fill(numInChannels) { new Channel(parms) }
-		val outChannels = Vec.fill(numOutChannels) { new Channel(parms).flip() }
-		val counters = Vec.fill(2) {new CounterIO }
+		val inChannels = Vec(numInChannels, new Channel(parms) )
+		val outChannels = Vec(numOutChannels, new Channel(parms).flip() )
+		val counters = Vec(2, new CounterIO )
 	}
 }
 
@@ -55,9 +55,9 @@ abstract class VCRouter(parms: Parameters) extends Module(parms) {
 	val numVCs = parms.get[Int]("numVCs")
 	
 	val io = new Bundle {
-		val inChannels = Vec.fill(numInChannels) { new ChannelVC(parms) }
-		val outChannels = Vec.fill(numOutChannels) { new ChannelVC(parms).flip() }
-		val counters = Vec.fill(2) {new CounterIO }
+		val inChannels = Vec(numInChannels, new ChannelVC(parms))
+		val outChannels = Vec(numOutChannels, new ChannelVC(parms).flip())
+		val counters = Vec(2, new CounterIO )
 	}
 }
 
@@ -89,19 +89,19 @@ class SimpleRouterTestWrapper(parms: Parameters) extends Module(parms){
 	val routingFuncCtor 	= parms.get[Parameters=>RoutingFunction]("rfCtor")
 
 	val io = new Bundle {
-		val inChannels  = Vec.fill(numInChannels) { new Channel(parms) }
-		val outChannels = Vec.fill(numOutChannels) { new Channel(parms).flip() }
+		val inChannels  = Vec(numInChannels, new Channel(parms) )
+		val outChannels = Vec(numOutChannels, new Channel(parms).flip() )
 		val headFlitIn  = new HeadFlit(parms).asInput
 		val headFlitOut = new Flit(parms).asOutput
 		val bodyFlitIn  = new BodyFlit(parms).asInput
 		val bodyFlitOut = new Flit(parms).asOutput
-		val headFlitsIn  = Vec.fill(numInChannels) { new HeadFlit(parms).asInput }
-		val headFlitsOut = Vec.fill(numInChannels) { new Flit(parms).asOutput }
-		val bodyFlitsIn  = Vec.fill(numInChannels) { new BodyFlit(parms).asInput }
-		val bodyFlitsOut = Vec.fill(numInChannels) { new Flit(parms).asOutput }
-		val flitsIn		 = Vec.fill(numInChannels) { new Flit(parms).asInput }
-		val flitsOutAsHead = Vec.fill(numInChannels) { new HeadFlit(parms).asOutput }
-		val flitsOutAsBody = Vec.fill(numInChannels) { new BodyFlit(parms).asOutput }
+		val headFlitsIn  = Vec(numInChannels, new HeadFlit(parms).asInput )
+		val headFlitsOut = Vec(numInChannels, new Flit(parms).asOutput )
+		val bodyFlitsIn  = Vec(numInChannels, new BodyFlit(parms).asInput )
+		val bodyFlitsOut = Vec(numInChannels, new Flit(parms).asOutput )
+		val flitsIn		 = Vec(numInChannels, new Flit(parms).asInput )
+		val flitsOutAsHead = Vec(numInChannels, new HeadFlit(parms).asOutput )
+		val flitsOutAsBody = Vec(numInChannels, new BodyFlit(parms).asOutput )
 	}
 
 	val headExtract = Chisel.Module( new HeadBundle2Flit(parms) )

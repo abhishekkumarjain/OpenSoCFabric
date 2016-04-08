@@ -39,7 +39,7 @@ abstract class RoutingFunction(parms: Parameters) extends Module(parms) {
 		val outHeadFlit = new HeadFlit(parms).asOutput
 		val result = UInt(width=log2Up(numResources)).asOutput
 		// val vcsAvailable = UInt(width=(numVCs*numResources)).asOutput
-		val vcsAvailable = Vec.fill(numResources) { UInt(width=numVCs) }.asOutput
+		val vcsAvailable = Vec(numResources, { UInt(width=numVCs) }.asOutput )
 	}
 }
 
@@ -62,7 +62,7 @@ class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 	val C = parms.get[Int]("Concentration") // Processors (endpoints) per router.
 
 	val flitDest = io.inHeadFlit.destination
-	val dimResults = Vec.fill(Dim) {UInt(width=log2Up(numResources))}
+	val dimResults = Vec(Dim, UInt(width=log2Up(numResources)))
 	// Now we examine the coordinates one by one
 	// CONVENTION: We assume the LSBs contain the destination in the first dimension (e.g., X), and so on.
 	for (i <- 0 until Dim) {
@@ -170,7 +170,7 @@ class CFlatBflyDOR(parms: Parameters) extends RoutingFunction(parms) {
 	val C = parms.get[Int]("Concentration") // Processors (endpoints) per router.
 
 	val flitDest = io.inHeadFlit.destination
-	val dimResults = Vec.fill(Dim) {UInt(width=log2Up(numResources))}
+	val dimResults = Vec(Dim, UInt(width=log2Up(numResources)))
 	// Now we examine the coordinates one by one
 	// CONVENTION: We assume the LSBs contain the destination in the first dimension (e.g., X), and so on.
 	for (i <- 0 until Dim) {

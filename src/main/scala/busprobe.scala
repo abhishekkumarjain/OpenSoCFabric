@@ -15,9 +15,9 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 	freeRunningCounter := Mux(freeRunningCounter === counterMax, UInt(0) , freeRunningCounter + UInt(1))
 
 	val io = new Bundle {
-		val inFlit 				= Vec.fill(routerRadix) { new Flit(parms).asInput }
-		val inValid				= Vec.fill(routerRadix) { Bool(INPUT)}
-		//val routerCord		= Vec.fill(Dim){ UInt(INPUT, width = log2Up(Dim))}
+		val inFlit 				= Vec(routerRadix, { new Flit(parms).asInput })
+		val inValid				= Vec(routerRadix, Bool(INPUT))
+		//val routerCord		= Vec(Dim, UInt(INPUT, width = log2Up(Dim)))
 		val routerCord			= UInt(INPUT, width = log2Up(Dim))
 		val startRecording		= Bool(INPUT)
 		val cyclesChannelBusy	= Vec(routerRadix, UInt(OUTPUT, width = counterMax.getWidth))

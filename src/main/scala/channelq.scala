@@ -243,7 +243,7 @@ class GenericChannelQ(parms: Parameters) extends Module(parms) {
 
 	// val destCordWidth = parms.get[Int]("destCordWidth")
 	// val destCordDim = parms.get[Int]("destCordDim")
-	// val destination = Vec.fill(destCordDim){UInt(width = destCordWidth)}
+	// val destination = Vec(destCordDim, UInt(width = destCordWidth))
 }
 
 class ChannelQTest(c: GenericChannelQ) extends Tester(c) {

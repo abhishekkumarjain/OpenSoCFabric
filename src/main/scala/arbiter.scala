@@ -31,7 +31,7 @@ class ResourceIO extends Chisel.Bundle {
 abstract class Arbiter(parms: Parameters) extends Module(parms) {
 	val numReqs = parms.get[Int]("numReqs")
 	val io = new Bundle {
-		val requests = Vec.fill(numReqs){ new RequestIO(parms) }.flip
+		val requests = Vec(numReqs, { new RequestIO(parms) }.flip)
 		val resource = new ResourceIO
 		val chosen = UInt(OUTPUT, Chisel.log2Up(numReqs))
 		}
@@ -95,7 +95,7 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 //	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ))
 	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ).reverse )
 	
-	//val PArraySorted = Vec.fill(numReqs){Reg(init=UInt(0,width=numReqs))}
+	//val PArraySorted = Reg(init=Vec(numReqs, UInt(0,width=numReqs)))
 	val PArraySorted = Reg(init=Vec(numPriorityLevels, Vec(numReqs, UInt(0, width=1))))
 
 	

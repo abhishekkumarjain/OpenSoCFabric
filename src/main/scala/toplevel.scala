@@ -40,8 +40,8 @@ class OpenSoC_CMesh_DecoupledWrapper(parms: Parameters) extends Module(parms) {
 	val numRouters : Int = K.product //Math.pow(K, Dim).toInt
 	val numPorts = numRouters * C// K.product//(Math.pow(K,Dim)*C).toInt // K^Dim = numRouters, numRouters*C = numPorts
     val io = new Bundle {
-        val inPorts     = Vec.fill(numPorts)  { new DecoupledIO[Flit](new Flit(parms)).flip() }
-        val outPorts    = Vec.fill(numPorts)  { new DecoupledIO[Flit](new Flit(parms)) }
+        val inPorts     = Vec(numPorts, new DecoupledIO[Flit](new Flit(parms)).flip() )
+        val outPorts    = Vec(numPorts, new DecoupledIO[Flit](new Flit(parms)) )
     }
     
     val network = Chisel.Module( new OpenSoC_CMesh[Flit](parms, (parms: Parameters) => new Flit(parms)) )
@@ -75,19 +75,19 @@ class OpenSoC_CMesh[T<: Data](parms: Parameters, tGen : Parameters => T) extends
 
 
 	val io = new Bundle {
-		val ports 	= Vec.fill(numPorts) { new OpenSoCChannelPort[T](parms,tGen)}
-		val headFlitsIn  = Vec.fill(numPorts) { new HeadFlit(parms).asInput }
-		val headFlitsOut = Vec.fill(numPorts) { new Flit(parms).asOutput }
-		val bodyFlitsIn  = Vec.fill(numPorts) { new BodyFlit(parms).asInput }
-		val bodyFlitsOut = Vec.fill(numPorts) { new Flit(parms).asOutput }
-		val flitsIn		 = Vec.fill(numPorts) { new Flit(parms).asInput }
-		val flitsOutAsHead = Vec.fill(numPorts) { new HeadFlit(parms).asOutput }
-		val flitsOutAsBody = Vec.fill(numPorts) { new BodyFlit(parms).asOutput }
-        val portsAsHeadFlits = Vec.fill(numPorts)   { new HeadFlit(parms).asOutput }
-        val portsAsBodyFlits = Vec.fill(numPorts)   { new BodyFlit(parms).asOutput }
+		val ports 	= Vec(numPorts, new OpenSoCChannelPort[T](parms,tGen))
+		val headFlitsIn  = Vec(numPorts, new HeadFlit(parms).asInput )
+		val headFlitsOut = Vec(numPorts, new Flit(parms).asOutput )
+		val bodyFlitsIn  = Vec(numPorts, new BodyFlit(parms).asInput )
+		val bodyFlitsOut = Vec(numPorts, new Flit(parms).asOutput )
+		val flitsIn		 = Vec(numPorts, new Flit(parms).asInput )
+		val flitsOutAsHead = Vec(numPorts, new HeadFlit(parms).asOutput )
+		val flitsOutAsBody = Vec(numPorts, new BodyFlit(parms).asOutput )
+        val portsAsHeadFlits = Vec(numPorts, new HeadFlit(parms).asOutput )
+        val portsAsBodyFlits = Vec(numPorts, new BodyFlit(parms).asOutput )
 
-		val cyclesRouterBusy	= Vec.fill(numRouters){ UInt(OUTPUT, width=counterMax.getWidth)}
-		val cyclesChannelBusy	= Vec.fill(numRouters*routerRadix){UInt(OUTPUT, width=counterMax.getWidth)}
+		val cyclesRouterBusy	= Vec(numRouters, UInt(OUTPUT, width=counterMax.getWidth))
+		val cyclesChannelBusy	= Vec(numRouters*routerRadix, UInt(OUTPUT, width=counterMax.getWidth))
 	}
 
 
@@ -209,17 +209,17 @@ class OpenSoC_CFlatBfly[T<: Data](parms: Parameters, tGen : Parameters => T) ext
 	val counterMax = UInt(32768)
 	
 	val io = new Bundle {
-		val ports = Vec.fill(numPorts) { new OpenSoCChannelPort[T](parms, tGen) }
-		val headFlitsIn  = Vec.fill(numPorts) { new HeadFlit(parms).asInput }
-		val headFlitsOut = Vec.fill(numPorts) { new Flit(parms).asOutput }
-		val bodyFlitsIn  = Vec.fill(numPorts) { new BodyFlit(parms).asInput }
-		val bodyFlitsOut = Vec.fill(numPorts) { new Flit(parms).asOutput }
-		val flitsIn		 = Vec.fill(numPorts) { new Flit(parms).asInput }
-		val flitsOutAsHead = Vec.fill(numPorts) { new HeadFlit(parms).asOutput }
-		val flitsOutAsBody = Vec.fill(numPorts) { new BodyFlit(parms).asOutput }
+		val ports = Vec(numPorts, new OpenSoCChannelPort[T](parms, tGen) )
+		val headFlitsIn  = Vec(numPorts, new HeadFlit(parms).asInput )
+		val headFlitsOut = Vec(numPorts, new Flit(parms).asOutput )
+		val bodyFlitsIn  = Vec(numPorts, new BodyFlit(parms).asInput )
+		val bodyFlitsOut = Vec(numPorts, new Flit(parms).asOutput )
+		val flitsIn		 = Vec(numPorts, new Flit(parms).asInput )
+		val flitsOutAsHead = Vec(numPorts, new HeadFlit(parms).asOutput )
+		val flitsOutAsBody = Vec(numPorts, new BodyFlit(parms).asOutput )
 
-		val cyclesRouterBusy	= Vec.fill(numRouters){ UInt(OUTPUT, width=counterMax.getWidth)}
-		val cyclesChannelBusy	= Vec.fill(numRouters*routerRadix){UInt(OUTPUT, width=counterMax.getWidth)}
+		val cyclesRouterBusy	= Vec(numRouters, UInt(OUTPUT, width=counterMax.getWidth))
+		val cyclesChannelBusy	= Vec(numRouters*routerRadix, UInt(OUTPUT, width=counterMax.getWidth))
 	}
 
 

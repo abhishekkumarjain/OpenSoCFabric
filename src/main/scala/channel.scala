@@ -20,7 +20,7 @@ class HeadFlit(parms: Parameters) extends FlitCommon(parms) {
 	val numPriorityLevels = parms.get[Int]("numPriorityLevels") 
 	
 	val packetType        = UInt(width = packetTypeWidth)
-	val destination       = Vec.fill(destCordDim){UInt(width = destCordWidth)}
+	val destination       = Vec(destCordDim, UInt(width = destCordWidth))
 	val priorityLevel     = UInt(width = log2Up(numPriorityLevels))
 	
 	/*
@@ -111,7 +111,7 @@ class ChannelVC(parms: Parameters) extends Bundle {
 	
 	val flit    	= new Flit(parms).asInput
 	val flitValid	= Bool(INPUT)
-	val credit  	= Vec.fill(numVCs) { new Credit() } // Direction as Output in class def
+	val credit  	= Vec(numVCs, new Credit() ) // Direction as Output in class def
 }
 
 class Channel(parms: Parameters) extends Bundle {
@@ -164,7 +164,7 @@ class UpdateBreadCrumb(parms: Parameters) extends Module(parms) {
 	val destCordWidth   = parms.get[Int]("destCordWidth")
 	val io = new Bundle {
 		val oldFlit         = new Flit(parms).asInput
-		val routerID        = Vec.fill(destCordDim){UInt(width = destCordWidth)}.asInput
+		val routerID        = Vec(destCordDim, UInt(width = destCordWidth)).asInput
         val routerIDValid   = UInt(INPUT, width=1)
 		val newFlit         = new Flit(parms).asOutput
 	}
@@ -176,7 +176,7 @@ class UpdateBreadCrumb(parms: Parameters) extends Module(parms) {
 	h.vcPort        := io.oldFlit.asHead().vcPort
 	h.packetType    := io.oldFlit.asHead().packetType
 	h.destination.zipWithIndex.foreach{ case (e,i) => e := io.oldFlit.asHead().destination(i) }
-    for (i <- 0 until h.breadCrumb.size){h.breadCrumb(i) := Vec.fill(destCordDim){UInt(0)}}
+    for (i <- 0 until h.breadCrumb.size){h.breadCrumb(i) := Vec(destCordDim, UInt(0))}
 
      //   h.breadCrumb                    := io.oldFlit.asHead().breadCrumb
      //   h.breadCrumbIndex               := io.oldFlit.asHead().breadCrumbIndex

@@ -31,7 +31,7 @@ class BitUnion(tag2data: Map[String, Chisel.Data]) {
   }
 
   def pack[T <: Chisel.Data](tag: String, x: T) : Chisel.Bits = {
-    // val fred = Vec.fill(this.width) { UInt(width = 1) }
+    // val fred = Vec(this.width, UInt(width = 1) )
 
     // // fred(0, codeWidth - 1).toBits := UInt(tad2code(tag), width = codeWidth)
     val code = UInt(tag2code(tag), width = codeWidth)
