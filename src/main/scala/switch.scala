@@ -17,8 +17,8 @@ class Switch[T <: Data](val gen: T, parms: Parameters) extends Module(parms) {
 	val numInPorts 	= parms.get[Int]("numInPorts")
 	val numOutPorts	= parms.get[Int]("numOutPorts")
 	val io = new Bundle {
-		val inPorts = Vec.fill(numInPorts) {gen.clone.asInput}
-		val outPorts = Vec.fill(numOutPorts) {gen.clone.asOutput}
+		val inPorts = Vec.fill(numInPorts) {gen.cloneType.asInput}
+		val outPorts = Vec.fill(numOutPorts) {gen.cloneType.asOutput}
 		val sel = Vec.fill(numOutPorts) {UInt(width = log2Up(numInPorts))}.asInput
 	}
 	for( i <- 0 until numOutPorts) {
@@ -66,9 +66,9 @@ class SwitchTest(c: Switch[UInt]) extends MapTester(c, Array(c.io)) {
 class MuxN[T <: Data](val gen: T, parms: Parameters) extends Module(parms) {
 	val n = parms.get[Int]("n")
 	val io = new Bundle {
-		val ins = Vec.fill(n) {gen.clone.asInput}
+		val ins = Vec.fill(n) {gen.cloneType.asInput}
 		val sel = UInt(INPUT, log2Up(n))
-		val out = gen.clone.asOutput
+		val out = gen.cloneType.asOutput
 	}
 
 	io.out := io.ins(io.sel)

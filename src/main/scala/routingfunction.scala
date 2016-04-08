@@ -49,7 +49,7 @@ class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 
 	def priorityEncoder(a: UInt, b: UInt) : UInt = {
 		val result = UInt(width=Math.max(a.getWidth, b.getWidth))
-		when (a != UInt(0)) {
+		when (a =/= UInt(0)) {
 			result := a
 		} .otherwise {
 			result := b
@@ -90,7 +90,7 @@ class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 }
 
 class CMDORTester (c: CMeshDOR) extends Tester(c) {
-	val flitWidth = c.io.inHeadFlit.getWidth()
+	val flitWidth = c.io.inHeadFlit.getWidth
 	val numVCs = c.io.inHeadFlit.numVCs
 	val packetIDWidth = c.io.inHeadFlit.packetIDWidth
 	val packetTypeWidth = c.io.inHeadFlit.packetTypeWidth
@@ -199,7 +199,7 @@ class CFlatBflyDOR(parms: Parameters) extends RoutingFunction(parms) {
 }
 
 class CFlatBflyDORTester (c: CFlatBflyDOR) extends Tester(c) {
-	val flitWidth = c.io.inHeadFlit.getWidth()
+	val flitWidth = c.io.inHeadFlit.getWidth
 	val numVCs = c.io.inHeadFlit.numVCs
 	val packetIDWidth = c.io.inHeadFlit.packetIDWidth
 	val packetTypeWidth = c.io.inHeadFlit.packetTypeWidth

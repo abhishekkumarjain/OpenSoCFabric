@@ -19,22 +19,22 @@ class RingBuffer(parms: Parameters) extends Module(parms) {
 	// 	- all enables (including push) are assumed to be single cycle pulses
 	// 	- if you assert pop and an enable on the same cycle... WTF happens?
 	val io = new Bundle {
-			val writeEnable			= Vec.fill(pointerCount){ Bool( INPUT  ) }
-			val readDataValid		= Vec.fill(pointerCount){ Bool( OUTPUT ) }
+			val writeEnable			= Vec(pointerCount, Bool( INPUT  ))
+			val readDataValid		= Vec(pointerCount, Bool( OUTPUT ))
 			val pop					= Bool( INPUT )	//Advances all read and write pointers
-			val readPointerData		= Vec.fill(pointerCount){ UInt( OUTPUT, width = bufferWidth ) }
-			val writePointerData	= Vec.fill(pointerCount){ UInt( INPUT , width = bufferWidth ) }
+			val readPointerData		= Vec(pointerCount, UInt( OUTPUT, width = bufferWidth ))
+			val writePointerData	= Vec(pointerCount, UInt( INPUT , width = bufferWidth ))
 			val push				= Bool( INPUT )
 			val pushData			= UInt( INPUT, width = bufferWidth)
 			val pushReady			= Bool( OUTPUT )
 	}
 	
-	val buffer 			= Vec.fill(totalBufferEntries)	{ Reg(init = UInt(0, width = bufferWidth)) }
-	val bufferValids	= Vec.fill(totalBufferEntries)  { Reg(init = UInt(0, width = 1)) }
-	val accessPointers	= Vec.fill(pointerCount)		{ Reg(init = UInt(0, width = log2Up(totalBufferEntries)) ) }
+	val buffer 			= Reg(init = Vec(totalBufferEntries, UInt(0, width = bufferWidth)))
+	val bufferValids	= Reg(init = Vec(totalBufferEntries, UInt(0, width = 1)))
+	val accessPointers	= Reg(init = Vec(pointerCount, UInt(0, width = log2Up(totalBufferEntries))))
 	val pushPointer		= Reg(init = UInt(0, width = log2Up(totalBufferEntries)) )	
 
-	val sel  	 		= UInt(accessPointers(0)) != UInt(0)
+	val sel  	 		= accessPointers(0) =/= UInt(0)
 	val bufferEmpty 	= ~orR(bufferValids.toBits)
 	val pushReady		= ~andR(bufferValids.toBits)
 

@@ -20,14 +20,14 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		//val routerCord		= Vec.fill(Dim){ UInt(INPUT, width = log2Up(Dim))}
 		val routerCord			= UInt(INPUT, width = log2Up(Dim))
 		val startRecording		= Bool(INPUT)
-		val cyclesChannelBusy	= Vec.fill(routerRadix){UInt(OUTPUT, width = counterMax.getWidth)}
+		val cyclesChannelBusy	= Vec(routerRadix, UInt(OUTPUT, width = counterMax.getWidth))
 		val cyclesRouterBusy	= UInt(OUTPUT,width = counterMax.getWidth) 
 	}
 
 
-	val cyclesChannelBusy = Vec.fill(routerRadix){ Reg(init = UInt(0, width = counterMax.getWidth)) }
+	val cyclesChannelBusy = Reg(init = Vec(routerRadix, UInt(0, width = counterMax.getWidth)))
 	val cyclesRouterBusy  = Reg(init = UInt(0, counterMax.getWidth)) 
-	var cyclesChannelBusyScoreboard = Vec.fill(routerRadix){ Reg(init = UInt(0, width=1)) }
+	var cyclesChannelBusyScoreboard = Reg(init = Vec(routerRadix, UInt(0, width=1)))
 
 	
     assert((UInt(routerRadix) > UInt(1)), "BusProbe: RouterRadix must be > 1")	

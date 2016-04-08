@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import FixedPoint._
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.LinkedHashMap
 import scala.util.Random
@@ -53,7 +52,7 @@ class Packet (parms: Parameters) extends Bundle {
 	val debug					= UInt(INPUT, width = packetWidth)
 	val	payload					= Vec.fill(packetLength - packetControlFieldCount){ UInt(INPUT, width = packetWidth) }
 
-	override def clone = { new Packet(parms).asInstanceOf[this.type] }
+	override def cloneType = { new Packet(parms).asInstanceOf[this.type] }
 }
 
 abstract class InputToFlit[T<: Data](parms : Parameters, tGen : Parameters => T )extends Module(parms) {
@@ -91,7 +90,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 	val Dim				= parms.get[Int]("TopologyDimension")
 	val C 				= parms.get[Int]("Concentration") // Processors (endpoints) per router.
 
-	val flitWidth 		= Flit.fromBits(UInt(0), parms).getWidth()
+	val flitWidth 		= Flit.fromBits(UInt(0), parms).getWidth
 
 	val headBundle2Flit = Chisel.Module( new HeadBundle2Flit(parms ) )
 	val bodyBundle2Flit	= Chisel.Module( new BodyBundle2Flit(parms ) )

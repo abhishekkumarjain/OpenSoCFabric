@@ -22,8 +22,8 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 		val rvPipelineReg = Vec.fill(pipelineDepth) { Bool(OUTPUT) }
 	}
 
-	val regFile = Vec.fill(regDepth) { Reg(init = UInt(0, width = regWidth)) }
-	val regFileValid = Vec.fill(regDepth) { Reg(init = Bool(false)) }
+	val regFile = Reg(init = Vec(regDepth, UInt(0, width = regWidth)))
+	val regFileValid = Reg(init = Vec(regDepth, Bool(false)))
 	
 	val writePointer = Reg(init = UInt(0, width = log2Up(regDepth)) )
 	val readPointer = Reg(init = UInt(0, width = log2Up(regDepth)) )
@@ -33,7 +33,7 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 
 
 	io.full := andR(regFileValid.toBits())
-	io.readValid := (writePointer != readPointer) && orR(regFileValid.toBits())
+	io.readValid := (writePointer =/= readPointer) && orR(regFileValid.toBits())
 
 	when (io.writeEnable && !regFileValid(writePointer)) {
 		regFile(writePointer) := io.writeData

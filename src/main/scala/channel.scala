@@ -29,7 +29,7 @@ class HeadFlit(parms: Parameters) extends FlitCommon(parms) {
 	//	Error Detection/Correction
 	*/
 
-	override def clone = { new HeadFlit(parms).asInstanceOf[this.type] }
+	override def cloneType = { new HeadFlit(parms).asInstanceOf[this.type] }
 }
 
 class BodyFlit(parms: Parameters) extends FlitCommon(parms) {
@@ -40,7 +40,7 @@ class BodyFlit(parms: Parameters) extends FlitCommon(parms) {
 	val flitID          = UInt(width = flitIDWidth)
 	val payload         = UInt(width = payloadWidth)
 
-	override def clone = { new BodyFlit(parms).asInstanceOf[this.type] }
+	override def cloneType = { new BodyFlit(parms).asInstanceOf[this.type] }
 }
 
 class Flit(parms: Parameters) extends Bundle {
@@ -75,7 +75,7 @@ class Flit(parms: Parameters) extends Bundle {
 		vcBits
 	}
 
-	override def clone = { new Flit(parms).asInstanceOf[this.type] }
+	override def cloneType = { new Flit(parms).asInstanceOf[this.type] }
 	// override def width : Int = {x.width}
 }
 

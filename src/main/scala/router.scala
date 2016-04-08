@@ -544,7 +544,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
 	)
 
 	val validVCs = (0 until numIns).map( a =>
-		Vec.fill(numOutChannels) { Reg(UInt(0, width=numVCs)) }
+		Reg(Vec(numOutChannels, UInt(width=numVCs)))
 	)
 
 	val creditConsReady = Vec( (0 until numOutChannels).map( c =>

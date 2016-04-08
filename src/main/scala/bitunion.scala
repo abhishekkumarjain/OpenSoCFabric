@@ -61,7 +61,7 @@ class BitUnion(tag2data: Map[String, Chisel.Data]) {
   }
 
   def unpack[T <: Chisel.Data](tag: String, x: Chisel.Bits) : T = {
-    val data = tag2data(tag).clone
+    val data = tag2data(tag).cloneType
     // println("data getWidth: " + data.toBits.getWidth + "\twidth: " + data.width)
     data.fromBits(x.apply(codeWidth+data.toBits.getWidth-1, codeWidth)).asInstanceOf[T]
   }
