@@ -22,8 +22,8 @@ class CreditBuffer(parms: Parameters) extends Module(parms){
     val routerRadix = 2 * Dim + C
     
     val io = new Bundle{
-        val in  = Vec.fill(routerRadix) { new ChannelVC(parms) }
-        val out = Vec.fill(routerRadix) { new ChannelVC(parms).flip() }
+        val in  = Vec(routerRadix, new ChannelVC(parms) )
+        val out = Vec(routerRadix, new ChannelVC(parms).flip() )
     }
 
     for (i <- 0 until routerRadix){
@@ -58,12 +58,12 @@ abstract class Topology(parms: Parameters) extends Module(parms) {
 	val counterMax = UInt(32768)
 	
 	val io = new Bundle {
-		val inChannels  		= Vec.fill(numIOChannels) { new Channel(parms) }
-		val outChannels 		= Vec.fill(numIOChannels) { new Channel(parms).flip() }
-		//	val cyclesRouterBusy	= Vec.fill(numRouters){ UInt(OUTPUT, width=counterMax.getWidth)}
-		//	val cyclesChannelBusy	= Vec.fill(numRouters*routerRadix){UInt(OUTPUT, width=counterMax.getWidth)}
-		val cyclesRouterBusy	= Vec.fill(128){ UInt(OUTPUT, width=counterMax.getWidth)}	//DDD: Hack! need to create a counter per router, not some magic number
-		val cyclesChannelBusy	= Vec.fill(128*5){UInt(OUTPUT, width=counterMax.getWidth)}
+		val inChannels  		= Vec(numIOChannels, new Channel(parms) )
+		val outChannels 		= Vec(numIOChannels, new Channel(parms).flip() )
+		//	val cyclesRouterBusy	= Vec(numRouters, UInt(OUTPUT, width=counterMax.getWidth))
+		//	val cyclesChannelBusy	= Vec(numRouters*routerRadix, UInt(OUTPUT, width=counterMax.getWidth))
+		val cyclesRouterBusy	= Vec(128, UInt(OUTPUT, width=counterMax.getWidth))	//DDD: Hack! need to create a counter per router, not some magic number
+		val cyclesChannelBusy	= Vec(128*5, UInt(OUTPUT, width=counterMax.getWidth))
 	}
 }
 
@@ -84,12 +84,12 @@ abstract class VCTopology(parms: Parameters) extends Module(parms) {
 	val counterMax = UInt(32768)
 	
 	val io = new Bundle {
-		val inChannels  		= Vec.fill(numIOChannels) { new ChannelVC(parms) }
-		val outChannels 		= Vec.fill(numIOChannels) { new ChannelVC(parms).flip() }
-		//	val cyclesRouterBusy	= Vec.fill(numRouters){ UInt(OUTPUT, width=counterMax.getWidth)}
-		//	val cyclesChannelBusy	= Vec.fill(numRouters*routerRadix){UInt(OUTPUT, width=counterMax.getWidth)}
-		val cyclesRouterBusy	= Vec.fill(128){ UInt(OUTPUT, width=counterMax.getWidth)}	//DDD: Hack! need to create a counter per router, not some magic number
-		val cyclesChannelBusy	= Vec.fill(128*5){UInt(OUTPUT, width=counterMax.getWidth)}
+		val inChannels  		= Vec(numIOChannels, new ChannelVC(parms) )
+		val outChannels 		= Vec(numIOChannels, new ChannelVC(parms).flip() )
+		//	val cyclesRouterBusy	= Vec(numRouters, UInt(OUTPUT, width=counterMax.getWidth))
+		//	val cyclesChannelBusy	= Vec(numRouters*routerRadix, UInt(OUTPUT, width=counterMax.getWidth))
+		val cyclesRouterBusy	= Vec(128, UInt(OUTPUT, width=counterMax.getWidth))	//DDD: Hack! need to create a counter per router, not some magic number
+		val cyclesChannelBusy	= Vec(128*5, UInt(OUTPUT, width=counterMax.getWidth))
 	}
 }
 

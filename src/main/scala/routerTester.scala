@@ -17,8 +17,8 @@ class SimpleVCRouterTestWrapper(parms: Parameters) extends Module(parms){
 	val routingFuncCtor 	= parms.get[Parameters=>RoutingFunction]("rfCtor")
 
 	val io = new Bundle {
-		val inChannels  = Vec.fill(numInChannels) { new Channel(parms) }
-		val outChannels = Vec.fill(numOutChannels) { new Channel(parms).flip() }
+		val inChannels  = Vec(numInChannels, new Channel(parms))
+		val outChannels = Vec(numOutChannels, new Channel(parms).flip())
 		val headFlitIn  = new HeadFlit(parms).asInput
 		val headFlitOut = new Flit(parms).asOutput
 		val bodyFlitIn  = new BodyFlit(parms).asInput

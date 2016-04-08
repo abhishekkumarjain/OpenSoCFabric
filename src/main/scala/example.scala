@@ -1,12 +1,12 @@
 /*
 class MyOpenSoC(NumPorts: UInt) extends OpenSoC {
 	val io = new Bundle {
-		val Ports = Vec.fill(NumPorts) (new AXI())
+		val Ports = Vec(NumPorts, new AXI())
 	}
-	val myInterfaces = Vec.fill(NumPorts) {Module (new NetworkInterface(NumPorts))}
-	val myInjectionQs = Vec.fill(NumPorts) {Module (new InjectionQ())}
+	val myInterfaces = Vec(NumPorts, Module (new NetworkInterface(NumPorts)))
+	val myInjectionQs = Vec(NumPorts, Module (new InjectionQ()))
 	val myTopo = Module(new Topology(NumPorts))
-	val myEjectionQs = Vec.fill(NumPorts) {Module (new EjectionQ())}
+	val myEjectionQs = Vec(NumPorts, Module (new EjectionQ()))
 	
 	for (i <- 0 until NumPorts-1) {
 		io.Ports(i) <> myInterfaces(i).io.AXIPort
@@ -18,7 +18,7 @@ class MyOpenSoC(NumPorts: UInt) extends OpenSoC {
 }
 
 class MyOpenSoC extends Module {
-	val myCPUs = Vec.fill(5) {Module(new CPU())}
+	val myCPUs = Vec(5, Module(new CPU()))
 	val myHMC = Module(new HMC())
 	val myTenGbE = Module(new TenGbE())
 	val myPCIe = Module(new PCIe())

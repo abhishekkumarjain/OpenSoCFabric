@@ -16,10 +16,10 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 		val readValid = Bool(OUTPUT)
 		val readIncrement = Bool(INPUT)
 
-		val writePipelineReg = Vec.fill(pipelineDepth) { UInt(INPUT, width = regWidth) }
-		val wePipelineReg = Vec.fill(pipelineDepth) { Bool(INPUT) }
-		val readPipelineReg = Vec.fill(pipelineDepth) { UInt(OUTPUT, width = regWidth) }
-		val rvPipelineReg = Vec.fill(pipelineDepth) { Bool(OUTPUT) }
+		val writePipelineReg = Vec(pipelineDepth, UInt(INPUT, width = regWidth) )
+		val wePipelineReg = Vec(pipelineDepth, Bool(INPUT) )
+		val readPipelineReg = Vec(pipelineDepth, UInt(OUTPUT, width = regWidth) )
+		val rvPipelineReg = Vec(pipelineDepth, Bool(OUTPUT) )
 	}
 
 	val regFile = Reg(init = Vec(regDepth, UInt(0, width = regWidth)))
