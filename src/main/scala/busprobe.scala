@@ -27,7 +27,7 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 
 	val cyclesChannelBusy = Reg(init = Vec(routerRadix, UInt(0, width = counterMax.getWidth)))
 	val cyclesRouterBusy  = Reg(init = UInt(0, counterMax.getWidth)) 
-	var cyclesChannelBusyScoreboard = Reg(init = Vec(routerRadix, UInt(0, width=1)))
+	var cyclesChannelBusyScoreboard = Reg(init = Vec(routerRadix, Bool(false)))
 
 	
     assert((UInt(routerRadix) > UInt(1)), "BusProbe: RouterRadix must be > 1")	
@@ -44,7 +44,7 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		io.cyclesChannelBusy(c) := cyclesChannelBusy(c)
 	}
 	
-	when (orR(Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits) ){
+	when (orR(Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits().toUInt()) ){
 		cyclesRouterBusy := cyclesRouterBusy + UInt(1)
 	}
 	io.cyclesRouterBusy := cyclesRouterBusy

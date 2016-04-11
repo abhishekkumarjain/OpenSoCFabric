@@ -33,7 +33,7 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 
 
 	io.full := andR(regFileValid.toBits())
-	io.readValid := (writePointer =/= readPointer) && orR(regFileValid.toBits())
+	io.readValid := (writePointer =/= readPointer) && orR(regFileValid.toBits().toUInt())
 
 	when (io.writeEnable && !regFileValid(writePointer)) {
 		regFile(writePointer) := io.writeData
