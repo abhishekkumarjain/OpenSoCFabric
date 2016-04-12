@@ -50,8 +50,10 @@ object OpenSoC {
                 case "--traceFilename"   => (traceFilename = arg(1))
                 case "--fragFactor"     => (fragmentationFactor = arg(1).toInt)
 				case "--targetDir" => myargs = myargs ++ Array(arg(0), arg(1))
-				case "--minimumCompatibility" => myargs = myargs ++ Array(arg(0), arg(1))
-				case "--test" => myargs = myargs ++ Array(arg(0))
+				case "--minimumCompatibility" =>
+				  myargs = myargs ++ Array(arg(0), arg(1))
+				case "--test" =>
+				  myargs = myargs ++ Array(arg(0))
 				case _ => Nil
 			}
 		)
