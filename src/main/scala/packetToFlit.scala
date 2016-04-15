@@ -175,7 +175,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 			.elsewhen(io.flitReady 	&& Chisel.Bool(payloadLength == UInt(0)))	{   state				:= s_idle
 																		queue.io.deq.ready	:= Bool(false)		  }
 			.otherwise			 {	state			:= s_debug		}
-			isTail						:= UInt(payloadLength) === UInt(0)
+			isTail						:= payloadLength === UInt(0)
 			io.flit						:= CreateBodyFlit(queue.io.deq.bits.debug, queue.io.deq.bits.command(PacketFieldIndex.packetID), UInt(4), isTail, parms)
 			io.flitValid				:= Bool(true)
 			headBundle2Flit.io.inHead 	:= new HeadFlit(parms).fromBits(UInt(0))
@@ -185,7 +185,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 			val payloadLength = queue.io.deq.bits.length(PacketFieldIndex.payloadLength)
 			when (io.flitReady) {	
 				when (payloadPhase < payloadLength) {
-					isTail				:= UInt(payloadPhase) === (UInt(payloadLength)-UInt(1))
+					isTail				:= payloadPhase === payloadLength - UInt(1)
 					printf("DEBUG:: payload Phase: %d payloadLength: %d\n", payloadPhase, payloadLength) 
 					state 				:= s_payload					
 					io.flit				:= CreateBodyFlit(queue.io.deq.bits.payload(payloadPhase), queue.io.deq.bits.command(PacketFieldIndex.packetID), (UInt(5) + payloadPhase), isTail, parms)

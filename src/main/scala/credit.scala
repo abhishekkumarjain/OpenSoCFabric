@@ -51,7 +51,7 @@ class CreditCon(parms: Parameters) extends Module(parms) {
 		credCount := credCount + io.inCredit.grant.toUInt()
 	}
 
-    assert((UInt(credCount) <= UInt(numCreds)), "CreditCon: Exceeded max credits")
+    assert(credCount <= UInt(numCreds), "CreditCon: Exceeded max credits")
 
 	io.outCredit := (credCount > UInt(threshold))
 	io.almostOut := (credCount === UInt(threshold+1))
