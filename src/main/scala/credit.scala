@@ -51,7 +51,7 @@ class CreditCon(parms: Parameters) extends Module(parms) {
 		credCount := credCount + io.inCredit.grant.toUInt()
 	}
 
-    assert((UInt(credCount) <= UInt(numCreds)), "CreditCon: Exceeded max credits")
+    assert(credCount <= UInt(numCreds), "CreditCon: Exceeded max credits")
 
 	io.outCredit := (credCount > UInt(threshold))
 	io.almostOut := (credCount === UInt(threshold+1))
@@ -83,49 +83,4 @@ class CreditTester(parms: Parameters) extends Module(parms) {
 	creditCon.io.inConsume <> io.inConsume
 	io.outCredit <> creditCon.io.outCredit
 	// io.outIsTail <> creditCon.io.outIsTail
-}
-
-
-class WHCreditTest(c: CreditTester) extends Tester(c) {
-	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
-
-	val randomSeed = new Random()
-	peek(c.creditCon.credCount)
-	poke(c.io.inConsume, 0)
-	expect(c.io.outCredit, 1)
-	step(1)
-	printf("---\n")
-
-	for (i <- 0 until c.numCreds) {
-		// printf("->\t")
-		peek(c.creditCon.credCount)
-		var isTail = randomSeed.nextBoolean()
-		poke(c.io.inGrant, 0)
-		// poke(c.io.inIsTail, isTail)
-		poke(c.io.inConsume, 1)
-		step(1)
-		// printf("->\t")
-		peek(c.creditCon.credCount)
-		expect(c.io.outCredit, i != c.numCreds - 1)
-		// expect(c.io.outIsTail, isTail)
-		// peek(c.io.outReady)
-		printf("---\n")
-	}
-	step(1) // Work around for Chisel's clock_hi/clock_lo issue
-	peek(c.creditCon.credCount)
-	expect(c.io.outCredit, 0)
-	printf("---\n")
-	step(1)
-	for (i <- 0 until (c.numCreds + 2)) {
-		poke(c.io.inConsume, (i == 0) || (i == 3))
-		poke(c.io.inGrant, 1)
-		peek(c.creditCon.credCount)
-		step(1)
-		peek(c.creditCon.credCount)
-		expect(c.io.outCredit, (1))
-		// peek(c.io.outReady)
-		printf("---\n")
-	}
-	step(1)
-	expect(c.io.outCredit, 1)
 }

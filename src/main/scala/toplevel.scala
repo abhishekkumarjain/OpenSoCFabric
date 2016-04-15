@@ -56,11 +56,6 @@ class OpenSoC_CMesh_DecoupledWrapper(parms: Parameters) extends Module(parms) {
         network.io.ports(port).out.credit.grant     := io.outPorts(port).ready
     }
 }
-class OpenSoC_CMesh_DecoupledWrapper_Tester(c: OpenSoC_CMesh_DecoupledWrapper, parms: Parameters) extends Tester(c) {
-	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
-
-	expect(c.io.inPorts(0).ready, 1)
-}
 
 class OpenSoC_CMesh[T<: Data](parms: Parameters, tGen : Parameters => T) extends Module(parms) {
 	val Dim = parms.get[Int]("TopologyDimension") // Dimension of topology
@@ -303,12 +298,6 @@ class OpenSoC_CFlatBfly[T<: Data](parms: Parameters, tGen : Parameters => T) ext
 	// 	}
 	// }
 }
-
-/*class OpenSoC_CFlatBflyTester(c: OpenSoC_CFlatBfly) extends Tester(c) {
-	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
-
-	expect(c.io.ports(0).in.credit.valid, 1)
-}*/
 
 class Flit2FlitBundle(parms: Parameters) extends Module(parms) {
 	val io = new Bundle {

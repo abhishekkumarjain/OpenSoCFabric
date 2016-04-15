@@ -175,7 +175,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 			.elsewhen(io.flitReady 	&& Chisel.Bool(payloadLength == UInt(0)))	{   state				:= s_idle
 																		queue.io.deq.ready	:= Bool(false)		  }
 			.otherwise			 {	state			:= s_debug		}
-			isTail						:= UInt(payloadLength) === UInt(0)
+			isTail						:= payloadLength === UInt(0)
 			io.flit						:= CreateBodyFlit(queue.io.deq.bits.debug, queue.io.deq.bits.command(PacketFieldIndex.packetID), UInt(4), isTail, parms)
 			io.flitValid				:= Bool(true)
 			headBundle2Flit.io.inHead 	:= new HeadFlit(parms).fromBits(UInt(0))
@@ -185,7 +185,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 			val payloadLength = queue.io.deq.bits.length(PacketFieldIndex.payloadLength)
 			when (io.flitReady) {	
 				when (payloadPhase < payloadLength) {
-					isTail				:= UInt(payloadPhase) === (UInt(payloadLength)-UInt(1))
+					isTail				:= payloadPhase === payloadLength - UInt(1)
 					printf("DEBUG:: payload Phase: %d payloadLength: %d\n", payloadPhase, payloadLength) 
 					state 				:= s_payload					
 					io.flit				:= CreateBodyFlit(queue.io.deq.bits.payload(payloadPhase), queue.io.deq.bits.command(PacketFieldIndex.packetID), (UInt(5) + payloadPhase), isTail, parms)
@@ -249,52 +249,4 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 	}
 	
 
-}
-	
-	
-class PacketToFlitTest(c: PacketToFlit) extends Tester(c) {
-	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
-
-	reset(1)
-	poke(c.io.packetValid, 0)
-	poke(c.io.flitReady, 1)
-	step(1) 	
-	val totalLength = 10
-	val payloadLength = 5
-
-	//setup a packet
-
-	poke(c.io.packet.sourceAddress, 0xDEAD)
-	poke(c.io.packet.destAddress, 0xBEEF)
-	poke(c.io.packet.length(0), totalLength)
-	poke(c.io.packet.length(PacketFieldIndex.payloadLength), payloadLength)
-	poke(c.io.packet.length(PacketFieldIndex.additionalFlags), 0)
-	poke(c.io.packet.command(PacketFieldIndex.command), 0xA)
-	poke(c.io.packet.command(PacketFieldIndex.commandOptions), 0x5)
-	poke(c.io.packet.debug, 0)
-	for(phase <- 0 until payloadLength){
-		poke(c.io.packet.payload(phase), 10*phase)
-	}
-	
-	step(1)
-	expect(c.io.flitValid, 0)
-	expect(c.io.packetReady, 1)
-	poke(c.io.packetValid, 1)
-	step(1)
-	expect(c.io.packetReady, 0)
-	expect(c.io.flitValid, 1)
-	step(9)
-	expect(c.io.packetReady, 0)
-	expect(c.io.flitValid, 1)
-	step(1)
-	expect(c.io.flitValid, 1)
-	expect(c.io.packetReady, 0)
-	step(1)
-	expect(c.io.flitValid, 0)
-	expect(c.io.packetReady, 1)
-	poke(c.io.packetValid, 0)
-	step(5)
-	
-	
-	
 }
