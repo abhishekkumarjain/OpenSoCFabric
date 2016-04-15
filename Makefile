@@ -14,9 +14,13 @@ smoke:
 publish-local:
 	$(SBT) $(SBT_FLAGS) publish-local
 
-check:
-	$(SBT) $(SBT_FLAGS) "run --sw true $(OPENSOC_FLAGS)"
-	$(SBT) $(SBT_FLAGS) "run --hw true $(OPENSOC_FLAGS)"
+check:	check-sw check-hw
+
+check-sw:
+	$(SBT) $(SBT_FLAGS) "test:run --sw true $(OPENSOC_FLAGS)"
+
+check-hw:
+	$(SBT) $(SBT_FLAGS) "test:run --hw true $(OPENSOC_FLAGS)"
 
 clean:
 	$(SBT) $(SBT_FLAGS) clean
