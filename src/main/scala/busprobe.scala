@@ -56,9 +56,3 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 	printf("\n")*/
 
 }
-
-class BusProbeTest(c: BusProbe) extends Tester(c) {
-
-	poke(c.io.inValid(0), 0)
-	step(1)
-}
