@@ -1,15 +1,9 @@
-// Name of Organization
-organization := "gov.lbl.crd.csd.cag"
-
-// Version number of project
-version := "1.1"
-
-// Project Name
-name := "OpenSoC"
-
-// Version of Scala being used
-scalaVersion := "2.11.7"
-
-// Version of Chisel being used
-//libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
-
+lazy val buildSettings = Seq (
+    organization := "gov.lbl.crd.csd.cag",
+    version := "1.1",
+    name := "OpenSoC",
+    scalaVersion := "2.11.7"
+)
+lazy val root = (project in file(".")).settings(buildSettings: _*).dependsOn(chisel)
+lazy val chisel = project in file("chisel3")
+lazy val chiselTesters = project in file("chisel-testers")
