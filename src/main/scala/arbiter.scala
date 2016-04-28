@@ -69,7 +69,7 @@ class RRArbiter(parms: Parameters) extends Arbiter(parms) {
     		passSelectL0 := Cat(Bool(false).toUInt, ~requestsBits) + Cat(Bool(false).toUInt, nextGrant(numReqs-2, 0), nextGrant(numReqs-1))
     		passSelectL1 := ~requestsBits + Bool(true).toUInt
     		winner := Mux(passSelectL0(numReqs), passSelectL1, passSelectL0(numReqs-1, 0)) & requestsBits
-    		nextGrant := Mux(orR(winner), winner, nextGrant)
+    		nextGrant := Mux(winner.orR, winner, nextGrant)
     	}
     //}
 	
@@ -139,7 +139,7 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
   //      winner := nextGrant
   //  }.otherwise {
   
-	when (orR(requestsBits)) {
+	when (requestsBits.orR) {
     	/* Locking logic encapsulating Round Robin logic */
     	when ( nextGrant(nextGrantUInt) && requestsBits(nextGrantUInt) && ~lockRelease ) {
     		/* If Locked (i.e. request granted but still requesting)
@@ -180,7 +180,7 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
     		passSelectL1 := (~PArraySorted(pmax).toBits) + Bool(true).toUInt
     		winner := Mux(passSelectL0(numReqs), passSelectL1, passSelectL0(numReqs-1, 0)) & (PArraySorted(pmax).toBits)
 		
-		winGrant  := Mux(orR(winner), winner, nextGrant)
+		winGrant  := Mux(winner.orR, winner, nextGrant)
 		nextGrant := winGrant
     	}
     	}

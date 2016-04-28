@@ -1,4 +1,4 @@
-chiselVersion	?= 2.3-SNAPSHOT
+chiselVersion	?= 3.0
 SBT		?= sbt
 SBT_FLAGS	?= -Dsbt.log.noformat=true -DchiselVersion=$(chiselVersion) -Dsbt.version=0.13.9
 TARGETDIR ?= ./target

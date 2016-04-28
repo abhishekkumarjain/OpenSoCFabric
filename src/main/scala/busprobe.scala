@@ -44,15 +44,15 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		io.cyclesChannelBusy(c) := cyclesChannelBusy(c)
 	}
 	
-	when (orR(Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits().toUInt()) ){
+	when (Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits().toUInt().orR ){
 		cyclesRouterBusy := cyclesRouterBusy + UInt(1)
 	}
 	io.cyclesRouterBusy := cyclesRouterBusy
 
 /*	println("PROBE: Router " + io.routerCord + " stats: Total cycles: " + freeRunningCounter + " Total cycles busy: " + cyclesRouterBusy + " Channel cycles busy: ")
 	for (i <- 0 until routerRadix) {
-		printf(" %s:%s", UInt(i), cyclesChannelBusy(i))
+		scala.Predef.printf(" %s:%s", UInt(i), cyclesChannelBusy(i))
 	}
-	printf("\n")*/
+	scala.Predef.printf("\n")*/
 
 }

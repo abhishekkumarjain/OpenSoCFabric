@@ -64,7 +64,7 @@ object OpenSoC {
 		val numPortsCMesh = Dim*2+C
 		val numPortsCFlatBfly = K.sum - Dim + C
 		val numPorts = numPortsCMesh
-		printf("Harness: %s Module: %s\n", harnessName, moduleName)
+		scala.Predef.printf("Harness: %s Module: %s\n", harnessName, moduleName)
         println ("K = " + K.toString)
 
 		def MakePacketChannel (parms: Parameters) : PacketChannel = {
@@ -408,12 +408,12 @@ object OpenSoC {
 														)
 													), (p)=>new Flit(p) )
 												))
-			case _	=> (printf("Unknown Module Name: %s\n", moduleName) )
+			case _	=> (scala.Predef.printf("Unknown Module Name: %s\n", moduleName) )
 		}
 
 		harnessName match {
 
-			case "RingBufferTest"			=> ( chiselMainTest(myargs, moduleToTest) { c => new RingBufferTest(c.asInstanceOf[RingBuffer]) } )
+/*			case "RingBufferTest"			=> ( chiselMainTest(myargs, moduleToTest) { c => new RingBufferTest(c.asInstanceOf[RingBuffer]) } )
 			case "MuxNTest"					=> ( chiselMainTest(myargs, moduleToTest) { c => new MuxNTest(c.asInstanceOf[MuxN[UInt]]) } )
 			case "SwitchTest"					=> ( chiselMainTest(myargs, moduleToTest) { c => new SwitchTest(c.asInstanceOf[Switch[UInt]]) } )
 			case "RRArbiterTest"			=> ( chiselMainTest(myargs, moduleToTest) { c => new RRArbiterTest(c.asInstanceOf[RRArbiter]) } )
@@ -431,17 +431,19 @@ object OpenSoC {
 			case "CFlatBflyDORTester"		=> ( chiselMainTest(myargs, moduleToTest) { c => new CFlatBflyDORTester(c.asInstanceOf[CFlatBflyDOR]) } )
 			case "SimpleRouterTester"		=> ( chiselMainTest(myargs, moduleToTest) { c => new SimpleRouterTester(c.asInstanceOf[SimpleRouterTestWrapper]) } )
 			case "OpenSoC_CFlatBtflyTester_Random"	=> ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CFlatBtflyTester_Random(c.asInstanceOf[OpenSoC_CFlatBfly[Flit]], parms) } )
-            case "OpenSoC_CMeshTester_Random_VarInjRate"    => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Random", packetCount, fragmentationFactor) } )
-            case "OpenSoC_CMesh_NeighborTester_VarInjRate"  => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Neighbor", packetCount, fragmentationFactor) } )
-            case "OpenSoC_CMesh_TornadoTester_VarInjRate"   => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Tornado", packetCount, fragmentationFactor) } )
-            case "OpenSoC_CMesh_BitReverseTester_VarInjRate" => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "BitReverse", packetCount, fragmentationFactor) } )
-            case "OpenSoC_CMesh_TransposeTester_VarInjRate" => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Transpose", packetCount, fragmentationFactor) } )
-            case "OpenSoC_CMesh_TraceTester"                 => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_TraceTester(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, traceFilename, packetCount ) } )
+*/
+      case "OpenSoC_CMeshTester_Random_VarInjRate"    => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Random", packetCount, fragmentationFactor) } )
+      case "OpenSoC_CMesh_NeighborTester_VarInjRate"  => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Neighbor", packetCount, fragmentationFactor) } )
+      case "OpenSoC_CMesh_TornadoTester_VarInjRate"   => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Tornado", packetCount, fragmentationFactor) } )
+      case "OpenSoC_CMesh_BitReverseTester_VarInjRate" => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "BitReverse", packetCount, fragmentationFactor) } )
+      case "OpenSoC_CMesh_TransposeTester_VarInjRate" => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_CombinedTester_VarInjRate(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, injRate, "Transpose", packetCount, fragmentationFactor) } )
+ /*   case "OpenSoC_CMesh_TraceTester"                 => ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_TraceTester(c.asInstanceOf[OpenSoC_CMesh[Flit]], parms, traceFilename, packetCount ) } )
 			case "OpenSoC_CMeshTester_Random_Packet"	=> ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMeshTester_Combined_Packet(c.asInstanceOf[OpenSoC_CMesh[Packet]], parms, "Random") } )
 			case "OpenSoC_CMeshTester_Neighbor_Packet"	=> ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMeshTester_Combined_Packet(c.asInstanceOf[OpenSoC_CMesh[Packet]], parms, "Neighbor") } )
 			case "OpenSoC_CMeshTester_BitReverse_Packet"	=> ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMeshTester_Combined_Packet(c.asInstanceOf[OpenSoC_CMesh[Packet]], parms, "BitReverse") } )
 			case "OpenSoC_CMesh_DecoupledWrapper_Tester"	=> ( chiselMainTest(myargs, moduleToTest) { c => new OpenSoC_CMesh_DecoupledWrapper_Tester(c.asInstanceOf[OpenSoC_CMesh_DecoupledWrapper], parms) } )
-			case _							=> (printf(" Unknown Test Harness Name: %s\n", harnessName))
+*/
+      case _							=> (scala.Predef.printf(" Unknown Test Harness Name: %s\n", harnessName))
 		}
 			
 	} //END chiselMain()

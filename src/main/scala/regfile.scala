@@ -32,8 +32,8 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 	val regRVPipelineRegs = (0 until pipelineDepth).map( a => Reg( Bool(false) ) )
 
 
-	io.full := andR(regFileValid.toBits())
-	io.readValid := (writePointer =/= readPointer) && orR(regFileValid.toBits().toUInt())
+	io.full := regFileValid.toBits().andR
+	io.readValid := (writePointer =/= readPointer) && regFileValid.toBits().toUInt().orR
 
 	when (io.writeEnable && !regFileValid(writePointer)) {
 		regFile(writePointer) := io.writeData

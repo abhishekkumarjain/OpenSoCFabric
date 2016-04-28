@@ -1,6 +1,7 @@
 package OpenSoC
 
 import Chisel._
+import Chisel.hwiotesters._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
@@ -264,7 +265,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 	//set up all flits to be driven, store in flits() array
   for(iter <- 0 until iterationCount){
 	for(port <- 0 until c.numPorts){
-		printf("port: %d\n", port)
+		scala.Predef.printf("port: %d\n", port)
 		
         packetLength =  Random.nextInt(7)
         if(packetLength < 3){
@@ -436,13 +437,13 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 		var rb = peek(c.io.cyclesRouterBusy(r)) 
 		statString = "Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
 		routerStatStringCSV = routerStatStringCSV + (rb.toFloat/cycleCount)*100 + ","
-		printf("%s\n",statString)
+		scala.Predef.printf("%s\n",statString)
 		for(i <- 0 until c.routerRadix) {
 			var cb = peek(c.io.cyclesChannelBusy((r*c.routerRadix) + i))
 			statString = statString + i +":" + cb + " " 
 			channelStatStringCSV =  channelStatStringCSV + (cb.toFloat/cycleCount)*100 + "," 
 		}
-		printf("%s\n",statString)
+		scala.Predef.printf("%s\n",statString)
 	}
 	routerUtilFile.write(routerStatStringCSV.dropRight(1) + "\n")
 	channelUtilFile.write(channelStatStringCSV.dropRight(1) + "\n")
@@ -457,7 +458,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 			var cb = peek(c.io.cyclesChannelBusy((r*c.routerRadix) + i))
 			statString = statString + i +":" + cb + " " 
 		}
-		printf("%s\n",statString)
+		scala.Predef.printf("%s\n",statString)
 	}*/
 
   }//end checking 

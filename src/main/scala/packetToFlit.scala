@@ -186,7 +186,7 @@ class PacketToFlit(parms: Parameters) extends InputToFlit[Packet](parms, p => ne
 			when (io.flitReady) {	
 				when (payloadPhase < payloadLength) {
 					isTail				:= payloadPhase === payloadLength - UInt(1)
-					printf("DEBUG:: payload Phase: %d payloadLength: %d\n", payloadPhase, payloadLength) 
+					scala.Predef.printf("DEBUG:: payload Phase: %d payloadLength: %d\n", payloadPhase, payloadLength)
 					state 				:= s_payload					
 					io.flit				:= CreateBodyFlit(queue.io.deq.bits.payload(payloadPhase), queue.io.deq.bits.command(PacketFieldIndex.packetID), (UInt(5) + payloadPhase), isTail, parms)
 					io.flitValid		:= Bool(true)
