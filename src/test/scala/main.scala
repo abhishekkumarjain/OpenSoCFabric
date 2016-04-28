@@ -1,6 +1,7 @@
 package OpenSoC
 
 import Chisel._
+import Chisel.hwiotesters._
 import scala.collection.mutable.MutableList
 	
 object OpenSoC {

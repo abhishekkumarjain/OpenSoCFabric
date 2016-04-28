@@ -16,21 +16,29 @@ class ReadyValid[ T <: Data] (parms : Parameters, tGen : Parameters => T) extend
 		val packet : T = tGen(parms).asInput
 		val packetReady	= Bool(OUTPUT)
 		val packetValid	= Bool(INPUT)
+
+    override def cloneType = { new ReadyValid(parms, tGen).asInstanceOf[this.type] }
 }
 
 class OpenSoCChannelPort[T <: Data](parms:Parameters, tGen : Parameters => T) extends Bundle {
 	val in = new ReadyValid[T](parms, tGen)
 	val out = new Channel(parms).flip()
+
+	override def cloneType = { new OpenSoCChannelPort(parms, tGen).asInstanceOf[this.type] }
 }
 
 class OpenSoCFlitChannelPort(parms:Parameters) extends Bundle {
 	val in = new Channel(parms)
 	val out = new Channel(parms).flip()
+
+	override def cloneType = { new OpenSoCFlitChannelPort(parms).asInstanceOf[this.type] }
 }
 
 class OpenSoCPacketChannelPort(parms:Parameters) extends Bundle {
 	val in = new PacketChannel(parms)
 	val out = new Channel(parms).flip()
+
+	override def cloneType = { new OpenSoCPacketChannelPort(parms).asInstanceOf[this.type] }
 }
 
 class OpenSoC_CMesh_DecoupledWrapper(parms: Parameters) extends Module(parms) {

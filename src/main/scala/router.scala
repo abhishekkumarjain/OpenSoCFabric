@@ -395,8 +395,11 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
             Vec ( ( 0 until numVCs).map( b =>
     	        Bool()
             ) ) ) )
-    consumeCredit.map( c =>
-    	c := Bool(false)
+    consumeCredit.map( c => {
+        for (i <- 0 until numVCs) {
+          c(i) := Bool(false)
+        }
+      }
     )
 	
 	//Router function is as follows:

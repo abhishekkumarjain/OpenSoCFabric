@@ -9,7 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 import java.io._
 
-class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends Tester(c) {
+class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends ClassicTester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
 //	implicit def int(x: Int): BigInt = x
   //	implicit def int(x: Bits): BigInt = x.litValue()
@@ -402,7 +402,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 	    				latencyUtilFile.write(packetID + "," + latency + "\n")
     					if (packetMap(packetID).deep != portDest.deep){
 			    			println("HEAD Flit expected to be " + packetMap(packetID).deep.mkString + " Instead, found: " + portDest.deep.mkString)
-		    				expect(false, "Incorrect dest for head flit " + packetID.toString)
+		    				assert(false, "Incorrect dest for head flit " + packetID.toString)
 	    				}
     				}
                 }

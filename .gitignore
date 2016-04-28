@@ -1,6 +1,6 @@
 *.class
 *.log
-
+*
 # sbt specific
 .cache/
 .history/
@@ -16,3 +16,7 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 /bin
+.idea
+
+# vim
+.swp

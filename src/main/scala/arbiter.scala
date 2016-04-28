@@ -150,8 +150,10 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
     	.otherwise {
 
 		//To refresh the Sorted Array
-		for (i <- 0 until numPriorityLevels){
-			PArraySorted(i) := UInt(0)
+		for (i <- 0 until numPriorityLevels) {
+			for (j <- 0 until numReqs) {
+        PArraySorted(i)(j) := UInt(0)
+      }
 		}
 
 		//To store the given priorities and the requesting ports in a sorted array

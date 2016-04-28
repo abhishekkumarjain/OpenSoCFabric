@@ -10,7 +10,7 @@ abstract class FlitCommon(val parms: Parameters) extends Bundle {
 	val isTail          = Bool()
 	
 	val vcPort          = UInt(width = log2Up(numVCs))
-	
+
 }
 
 class HeadFlit(parms: Parameters) extends FlitCommon(parms) {
@@ -22,7 +22,7 @@ class HeadFlit(parms: Parameters) extends FlitCommon(parms) {
 	val packetType        = UInt(width = packetTypeWidth)
 	val destination       = Vec(destCordDim, UInt(width = destCordWidth))
 	val priorityLevel     = UInt(width = log2Up(numPriorityLevels))
-	
+
 	/*
 	val RoutingMode = UInt(width = RoutingModeWidth)
 	// Possible Extentions
@@ -112,13 +112,16 @@ class ChannelVC(parms: Parameters) extends Bundle {
 	val flit    	= new Flit(parms).asInput
 	val flitValid	= Bool(INPUT)
 	val credit  	= Vec(numVCs, new Credit() ) // Direction as Output in class def
+
+	override def cloneType = { new ChannelVC(parms).asInstanceOf[this.type] }
 }
 
 class Channel(parms: Parameters) extends Bundle {
 	val flit		= new Flit(parms).asInput
 	val flitValid	= Bool(INPUT)
 	val credit		= new Credit() // Direction as Output in class def
-	
+
+	override def cloneType = { new Channel(parms).asInstanceOf[this.type] }
 }
 
 class ReplaceVCPort(parms: Parameters) extends Module(parms) {
