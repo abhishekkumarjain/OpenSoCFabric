@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class CFlatBflyDORTester (c: CFlatBflyDOR) extends Tester(c) {
 	val flitWidth = c.io.inHeadFlit.getWidth
@@ -26,19 +25,19 @@ class CFlatBflyDORTester (c: CFlatBflyDOR) extends Tester(c) {
 		for (i <- 0 until 7) {
 			i match {
 				case 6 =>
-					randoms(j)(i) = BigInt(Random.nextInt(Math.pow(2, packetIDWidth).toInt))
+					randoms(j)(i) = BigInt(rnd.nextInt(Math.pow(2, packetIDWidth).toInt))
 				case 5 =>
-					randoms(j)(i) = BigInt(Random.nextInt(Math.pow(2, 1).toInt))
+					randoms(j)(i) = BigInt(rnd.nextInt(Math.pow(2, 1).toInt))
 				case 4 =>
-					randoms(j)(i) = BigInt(Random.nextInt(numVCs))
+					randoms(j)(i) = BigInt(rnd.nextInt(numVCs))
 				case 3 =>
-					randoms(j)(i) = BigInt(Random.nextInt(Math.pow(2, packetTypeWidth).toInt))
+					randoms(j)(i) = BigInt(rnd.nextInt(Math.pow(2, packetTypeWidth).toInt))
 				case 2 =>
-					randoms(j)(i) = BigInt(Random.nextInt(c.C).toInt)//0) // BigInt(Random.nextInt(Math.pow(2, destCordWidth).toInt))
+					randoms(j)(i) = BigInt(rnd.nextInt(c.C).toInt)//0) // BigInt(rnd.nextInt(Math.pow(2, destCordWidth).toInt))
 				case 1 =>
-					randoms(j)(i) = BigInt(Random.nextInt(c.K(1)).toInt)
+					randoms(j)(i) = BigInt(rnd.nextInt(c.K(1)).toInt)
 				case 0 =>
-					randoms(j)(i) = BigInt(Random.nextInt(c.K(0)).toInt)
+					randoms(j)(i) = BigInt(rnd.nextInt(c.K(0)).toInt)
 			}
 		}
 		printf("%d: randoms(0): %d\trandoms(1): %d\n", j, randoms(j)(0), randoms(j)(1))

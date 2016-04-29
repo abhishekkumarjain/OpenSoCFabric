@@ -56,6 +56,8 @@ object OpenSoC {
 				  myargs = myargs ++ Array(arg(0))
 				case "--lineNumbers" =>
 				  myargs = myargs ++ Array(arg(0))
+				case "--testerSeed" =>
+				  myargs = myargs ++ Array(arg(0), arg(1))
 				case _ => Nil
 			}
 		)

@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 /*
 abstract class RoutingFunction(parms: Parameters) extends Module(parms) {

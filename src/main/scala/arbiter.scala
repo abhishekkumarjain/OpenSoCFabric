@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 class RequestIO(val parms:Parameters) extends Bundle {
 	val numPriorityLevels = parms.get[Int]("numPriorityLevels")

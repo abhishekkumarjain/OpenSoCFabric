@@ -4,7 +4,6 @@ import Chisel._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
-import scala.util.Random
 import java.io._
 
 class OpenSoC_CFlatBtflyTester_Random(c: OpenSoC_CFlatBfly[Flit], parms: Parameters) extends Tester(c) {
@@ -97,7 +96,7 @@ class OpenSoC_CFlatBtflyTester_Random(c: OpenSoC_CFlatBfly[Flit], parms: Paramet
 	var curID = 0	
 	for(port <- 0 until c.numPorts){
 	  for(iter <-0 until iterationCount) {
-		dests(port)(iter)     = (Random.nextInt(c.K(0)), Random.nextInt(c.K(1)))
+		dests(port)(iter)     = (rnd.nextInt(c.K(0)), rnd.nextInt(c.K(1)))
 		packetIDs(port)(iter) = curID % 256
 		println(packetIDs(port)(iter) )
 		packetIDsInt(port)(iter) = UInt( curID % 256)
@@ -255,7 +254,7 @@ class OpenSoC_CFlatBtflyTester_Random(c: OpenSoC_CFlatBfly[Flit], parms: Paramet
 	channelStatStringCSV = ""	
 	for (r <- 0 until c.numRouters) {
 		var rb = peek(c.io.cyclesRouterBusy(r)) 
-		statString = "Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
+		statString = "CFB Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
 		routerStatStringCSV = routerStatStringCSV + (rb.toFloat/cycleCount)*100 + ","
 		printf("%s\n",statString)
 		for(i <- 0 until c.routerRadix) {

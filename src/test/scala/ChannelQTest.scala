@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class ChannelQTest(c: GenericChannelQ) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
@@ -9,7 +8,7 @@ class ChannelQTest(c: GenericChannelQ) extends Tester(c) {
 	val queueDepth : Int = c.queueDepth
 	val flitWidth : Int = c.flitWidth
 	
-	val randoms = (0 to 4*queueDepth).map(x => Random.nextInt(Math.pow(2, flitWidth).toInt))
+	val randoms = (0 to 4*queueDepth).map(x => rnd.nextInt(Math.pow(2, flitWidth).toInt))
 	
 	// printf("Flit Width: %d\n", flitWidth)
 

@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 class RouterRegFile(parms: Parameters) extends Module(parms) {
 	val regWidth = parms.get[Int]("widthRegFile")

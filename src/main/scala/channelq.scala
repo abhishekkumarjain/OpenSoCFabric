@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 // abstract class ChannelQ(parms: Parameters) extends Module(parms) {
 // 	val queueDepth = parms.get[Int]("queueDepth")
