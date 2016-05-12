@@ -47,7 +47,7 @@ abstract class RoutingFunction(parms: Parameters) extends Module(parms) {
 class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 
 	def priorityEncoder(a: UInt, b: UInt) : UInt = {
-		val result = UInt(width=Math.max(a.getWidth, b.getWidth))
+		val result = Wire(UInt(width=Math.max(a.getWidth, b.getWidth)))
 		when (a =/= UInt(0)) {
 			result := a
 		} .otherwise {
@@ -61,7 +61,7 @@ class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 	val C = parms.get[Int]("Concentration") // Processors (endpoints) per router.
 
 	val flitDest = io.inHeadFlit.destination
-	val dimResults = Vec(Dim, UInt(width=log2Up(numResources)))
+	val dimResults = Vec(Dim, Wire(UInt(width=log2Up(numResources))))
 	// Now we examine the coordinates one by one
 	// CONVENTION: We assume the LSBs contain the destination in the first dimension (e.g., X), and so on.
 	for (i <- 0 until Dim) {

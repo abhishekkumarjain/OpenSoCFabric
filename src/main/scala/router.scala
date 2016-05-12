@@ -357,7 +357,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
 			// Reg(init=Bool(false))
 		))
 	val flitsAreTail = (0 until numIns).map ( a => 
-		Bool()
+		Wire(Bool())
 	)
 	val rfResultsVC = (0 until numIns).map( a => 
 		UInt(width=log2Up(numOutChannels))
@@ -369,7 +369,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
 
 	val creditConsReady = Vec( (0 until numOutChannels).map( c =>
 		Vec( (0 until numVCs).map(b =>
-			Bool()
+			Wire(Bool())
 		) )
 	) )
 
@@ -383,7 +383,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
 
     val readyToXmit = Vec ( ( 0 until numIns).map( a =>
             Vec ( ( 0 until numOutChannels).map( b =>
-                 Bool()
+                 Wire(Bool())
             ) ) ) )
     readyToXmit.map (a => 
         a.map ( c => 
@@ -392,7 +392,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
         )
     val consumeCredit = Vec( (0 until numOutChannels).map( c =>
             Vec ( ( 0 until numVCs).map( b =>
-    	        Bool()
+    	        Wire(Bool())
             ) ) ) )
     consumeCredit.map( c =>
     	c := Bool(false)
@@ -448,7 +448,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
             		val assignedVC          = Reg(init=UInt(0, width = io.inChannels(0).flit.getWidth))
 
 			val flitPriority        = Reg(init=UInt(0, width=log2Up(numPriorityLevels)))
-			val priorityLevel       = UInt(width=log2Up(numPriorityLevels))
+			val priorityLevel       = Wire(UInt(width=log2Up(numPriorityLevels)))
 			priorityLevel          := UInt(0)
 
             val VCRouterState       = new VCRouterState

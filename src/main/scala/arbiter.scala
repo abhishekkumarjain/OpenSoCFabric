@@ -43,16 +43,16 @@ class RRArbiter(parms: Parameters) extends Arbiter(parms) {
 
 	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ).reverse )
 
-	val passSelectL0 = UInt(width = numReqs + 1)
-	val passSelectL1 = UInt(width = numReqs)
-	val winner = UInt(width = numReqs)
+	val passSelectL0 = Wire(UInt(width = numReqs + 1))
+	val passSelectL1 = Wire(UInt(width = numReqs))
+	val winner = Wire(UInt(width = numReqs))
  	passSelectL0 := UInt(0)
  	passSelectL1 := UInt(0)
  	winner := UInt(0)
 
- 	val nextGrantUInt = UInt(width = log2Up(numReqs))
+ 	val nextGrantUInt = Wire(UInt(width = log2Up(numReqs)))
  	nextGrantUInt := Chisel.OHToUInt(nextGrant)
- 	val lockRelease = Bool()
+ 	val lockRelease = Wire(Bool())
  	lockRelease := io.requests(nextGrantUInt).releaseLock
 
   //  when(~io.resource.ready && ~lockRelease){
@@ -88,7 +88,7 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 //	val nextGrant = UInt(width=numReqs)
 //	nextGrant := UInt(1<<(numReqs-1))
 	
-	val winGrant = UInt(width=numReqs)
+	val winGrant = Wire(UInt(width=numReqs))
 	winGrant := UInt(1<<(numReqs-1))
 	
 //	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ))
@@ -98,18 +98,18 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 	val PArraySorted = Reg(init=Vec(numPriorityLevels, Vec(numReqs, UInt(0, width=1))))
 
 	
-	val passSelectL0 = UInt(width = numReqs + 1)
-	val passSelectL1 = UInt(width = numReqs)
+	val passSelectL0 = Wire(UInt(width = numReqs + 1))
+	val passSelectL1 = Wire(UInt(width = numReqs))
 //	val passSelectL0 = Chisel.Reg(init=UInt((0), width = numReqs+1))
 //	val passSelectL1 = Chisel.Reg(init=UInt((0), width = numReqs))
 
 
 //	val winner = UInt(width = numReqs)
 	
-	val winner       = UInt(width=numReqs)
+	val winner       = Wire(UInt(width=numReqs))
 //	val winner = Chisel.Reg(init=UInt((0), width = numReqs))
 //	val pmax = Chisel.Reg(init = UInt((numReqs-1) , width = log2Up(numReqs)))
-	val pmax         = UInt(width = log2Up(numReqs))
+	val pmax         = Wire(UInt(width = log2Up(numReqs)))
 //	val winnerPort = Chisel.Reg(init = UInt((0), width = log2Up(numReqs)))
 //	val winnerPort   = UInt(width = log2Up(numReqs))
 //	val maxi = Chisel.Reg(init = UInt((0),width = log2Up(numReqs)))
@@ -127,10 +127,10 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 // 	maxj := UInt(0)
 //      winnerPort := UInt(0)
 	pmax := UInt(0)
- 	val nextGrantUInt = UInt(width = log2Up(numReqs))
+ 	val nextGrantUInt = Wire(UInt(width = log2Up(numReqs)))
  	nextGrantUInt := Chisel.OHToUInt(nextGrant)
  	// pmax := Chisel.OHToUInt(nextGrant)
- 	val lockRelease = Bool()
+ 	val lockRelease = Wire(Bool())
  	lockRelease := io.requests(nextGrantUInt).releaseLock
 //	pmaxReg := pmax
 

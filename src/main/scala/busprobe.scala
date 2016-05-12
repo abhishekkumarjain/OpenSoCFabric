@@ -43,7 +43,7 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		io.cyclesChannelBusy(c) := cyclesChannelBusy(c)
 	}
 	
-	when (orR(Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits().toUInt()) ){
+	when (orR(cyclesChannelBusyScoreboard.toBits()) ){
 		cyclesRouterBusy := cyclesRouterBusy + UInt(1)
 	}
 	io.cyclesRouterBusy := cyclesRouterBusy
