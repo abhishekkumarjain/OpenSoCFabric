@@ -21,8 +21,8 @@ class RouterRegFile(parms: Parameters) extends Module(parms) {
 		val rvPipelineReg = Vec(pipelineDepth, Bool(OUTPUT) )
 	}
 
-	val regFile = Reg(init = Vec(regDepth, UInt(0, width = regWidth)))
-	val regFileValid = Reg(init = Vec(regDepth, Bool(false)))
+	val regFile = Reg(init = Vec.fill(regDepth)(UInt(0, width = regWidth)))
+	val regFileValid = Reg(init = Vec.fill(regDepth)(Bool(false)))
 	
 	val writePointer = Reg(init = UInt(0, width = log2Up(regDepth)) )
 	val readPointer = Reg(init = UInt(0, width = log2Up(regDepth)) )

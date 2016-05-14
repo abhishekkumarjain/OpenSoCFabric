@@ -95,7 +95,7 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ).reverse )
 	
 	//val PArraySorted = Reg(init=Vec(numReqs, UInt(0,width=numReqs)))
-	val PArraySorted = Reg(init=Vec(numPriorityLevels, Vec(numReqs, UInt(0, width=1))))
+	val PArraySorted = Reg(init=Vec.fill(numPriorityLevels)(Vec.fill(numReqs)(UInt(0, width=1))))
 
 	
 	val passSelectL0 = Wire(UInt(width = numReqs + 1))
