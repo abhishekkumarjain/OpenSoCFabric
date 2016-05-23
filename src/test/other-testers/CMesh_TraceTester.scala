@@ -8,7 +8,6 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control._
 import scala.io.Source
-import scala.util.Random
 import java.io._
 
 class OpenSoC_CMesh_TraceTester(c: OpenSoC_CMesh[Flit], parms: Parameters, traceFilename: String, linesToProcess: Int) extends Tester(c) {
@@ -301,7 +300,7 @@ class OpenSoC_CMesh_TraceTester(c: OpenSoC_CMesh[Flit], parms: Parameters, trace
 	channelStatStringCSV = ""	
 	for (r <- 0 until c.numRouters) {
 		var rb = peek(c.io.cyclesRouterBusy(r)) 
-		statString = "Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
+		statString = "CMT Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
 		routerStatStringCSV = routerStatStringCSV + (rb.toFloat/cycleCount)*100 + ","
 		scala.Predef.printf("%s\n",statString)
 		for(i <- 0 until c.routerRadix) {

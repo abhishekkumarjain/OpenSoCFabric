@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 class BusProbe(parms : Parameters) extends Module(parms) {
 
@@ -25,9 +24,9 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 	}
 
 
-	val cyclesChannelBusy = Reg(init = Vec(routerRadix, UInt(0, width = counterMax.getWidth)))
+	val cyclesChannelBusy = Reg(init = Vec.fill(routerRadix)(UInt(0, width = counterMax.getWidth)))
 	val cyclesRouterBusy  = Reg(init = UInt(0, counterMax.getWidth)) 
-	var cyclesChannelBusyScoreboard = Reg(init = Vec(routerRadix, Bool(false)))
+	var cyclesChannelBusyScoreboard = Reg(init = Vec.fill(routerRadix)(Bool(false)))
 
 	
     assert((UInt(routerRadix) > UInt(1)), "BusProbe: RouterRadix must be > 1")	
@@ -44,7 +43,7 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		io.cyclesChannelBusy(c) := cyclesChannelBusy(c)
 	}
 	
-	when (Vec((0 until routerRadix).map(n => cyclesChannelBusyScoreboard(n))).toBits().toUInt().orR ){
+	when (cyclesChannelBusyScoreboard.toBits().toUInt().orR ){
 		cyclesRouterBusy := cyclesRouterBusy + UInt(1)
 	}
 	io.cyclesRouterBusy := cyclesRouterBusy

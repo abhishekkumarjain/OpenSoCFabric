@@ -4,7 +4,6 @@ import Chisel._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
-import scala.util.Random
 import java.io._
 
 class OpenSoC_CMeshTester_Combined_Packet(c: OpenSoC_CMesh[Packet], parms: Parameters, testType : String) extends Tester(c) {
@@ -75,7 +74,7 @@ class OpenSoC_CMeshTester_Combined_Packet(c: OpenSoC_CMesh[Packet], parms: Param
 	}
 
 	def ComputeRandomDest( portNum : Int ) : (Int,Int) = {
-		val dest = (Random.nextInt(c.K(0)), (Random.nextInt(c.K(1)))) //Random.nextInt(c.K.product)
+		val dest = (rnd.nextInt(c.K(0)), (rnd.nextInt(c.K(1)))) //rnd.nextInt(c.K.product)
 		dest
 	}
 
@@ -229,7 +228,7 @@ class OpenSoC_CMeshTester_Combined_Packet(c: OpenSoC_CMesh[Packet], parms: Param
 	channelStatStringCSV = ""	
 	for (r <- 0 until c.numRouters) {
 		var rb = peek(c.io.cyclesRouterBusy(r)) 
-		statString = "Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
+		statString = "CMC P Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
 		routerStatStringCSV = routerStatStringCSV + (rb.toFloat/cycleCount)*100 + ","
 		scala.Predef.printf("%s\n",statString)
 		for(i <- 0 until c.routerRadix) {

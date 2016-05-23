@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class SwitchAllocTest(c: Allocator) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
@@ -14,7 +13,7 @@ class SwitchAllocTest(c: Allocator) extends Tester(c) {
 	scala.Predef.printf("---\n")
 	for (i <- 0 until numRes) {
 		for (j <- 0 until numReqs) {
-			// peek(c.io.requests(i)(j).grant)//, BigInt(Random.nextInt(2).toInt))
+			// peek(c.io.requests(i)(j).grant)//, BigInt(rnd.nextInt(2).toInt))
 			expect(c.io.requests(i)(j).grant, BigInt(0))
 		}
 		// peek(c.io.resources(i).valid)
@@ -24,7 +23,7 @@ class SwitchAllocTest(c: Allocator) extends Tester(c) {
 	}
 
 	for (run <- 0 until numRuns) {
-		val requests = Array.fill(numRes) (Array.fill(numReqs) (BigInt(Random.nextInt(2).toInt)))
+		val requests = Array.fill(numRes) (Array.fill(numReqs) (BigInt(rnd.nextInt(2).toInt)))
 		// val requests = Array.fill(numRes) (Array.fill(numReqs) (BigInt(0)))
 		val chosens = Array.fill(numRes) (BigInt(-1))
 
@@ -51,7 +50,7 @@ class SwitchAllocTest(c: Allocator) extends Tester(c) {
 		scala.Predef.printf("---\n")
 		for (i <- 0 until numRes) {
 			for (j <- 0 until numReqs) {
-				// peek(c.io.requests(i)(j).grant)//, BigInt(Random.nextInt(2).toInt))
+				// peek(c.io.requests(i)(j).grant)//, BigInt(rnd.nextInt(2).toInt))
 				expect(c.io.requests(i)(j).grant, j == chosens(i))
 				poke(c.io.requests(i)(j).releaseLock, 1)
 			}

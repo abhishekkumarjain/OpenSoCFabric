@@ -4,7 +4,6 @@ import Chisel._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
-import scala.util.Random
 
 class RouterRandomTester(c: SimpleRouterTestWrapper, parms: Parameters) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
@@ -66,7 +65,7 @@ class RouterRandomTester(c: SimpleRouterTestWrapper, parms: Parameters) extends 
 	var curID = 0	
 	for(port <- 0 until portsToDrive){
 	  for(iter <-0 until iterationCount) {
-		dests(port)(iter)     = (Random.nextInt(2), Random.nextInt(2))
+		dests(port)(iter)     = (rnd.nextInt(2), rnd.nextInt(2))
 		packetIDs(port)(iter) = curID % 256
 		packetIDsInt(port)(iter) = UInt( curID % 256)
 		curID += 1

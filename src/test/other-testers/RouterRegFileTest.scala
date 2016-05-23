@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class RouterRegFileTest(c: RouterRegFile) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
@@ -9,7 +8,7 @@ class RouterRegFileTest(c: RouterRegFile) extends Tester(c) {
 	val regWidth : Int = c.regWidth
 	val regDepth : Int = c.regDepth
 
-	val nums = (1 to regDepth + 1).map(x => BigInt(Random.nextInt(Math.pow(2,c.regWidth).toInt)))
+	val nums = (1 to regDepth + 1).map(x => BigInt(rnd.nextInt(Math.pow(2,c.regWidth).toInt)))
 
 	for (i <- 0 until regDepth + 1) {
 		poke(c.io.writeData, nums(i))

@@ -1,12 +1,11 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class WHCreditTest(c: CreditTester) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
 
-	val randomSeed = new Random()
+	val randomSeed = rnd
 	peek(c.creditCon.credCount)
 	poke(c.io.inConsume, 0)
 	expect(c.io.outCredit, 1)

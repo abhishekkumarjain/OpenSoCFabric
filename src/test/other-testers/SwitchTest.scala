@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 class SwitchTest(c: Switch[UInt]) extends MapTester(c, Array(c.io)) {
 	defTests {
@@ -10,7 +9,7 @@ class SwitchTest(c: Switch[UInt]) extends MapTester(c, Array(c.io)) {
 		val numInPorts : Int = c.numInPorts
 		val numOutPorts : Int = c.numOutPorts
 		val vars = new HashMap[Node, Node]()
-		val ins = (1 to numInPorts).map(x => Random.nextInt(Math.pow(2,c.gen.getWidth).toInt))
+		val ins = (1 to numInPorts).map(x => rnd.nextInt(Math.pow(2,c.gen.getWidth).toInt))
 		
 		for ( i <- 0 until numInPorts) {
 			vars(c.io.inPorts(i)) = UInt(ins(i))

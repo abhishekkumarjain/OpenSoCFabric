@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 import scala.runtime.ScalaRunTime._
 
 /*abstract class TopologyParams {

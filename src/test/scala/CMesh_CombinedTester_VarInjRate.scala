@@ -1,12 +1,11 @@
 package OpenSoC
 
 import Chisel._
-import Chisel.hwiotesters._
+import Chisel.iotesters._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
 import scala.collection.mutable.ArrayBuffer
-import scala.util.Random
 import java.io._
 
 class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends ClassicTester(c) {
@@ -78,7 +77,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 
 	def FlipCoin( portNum : Int) : Boolean = {
 
-		val coinFlip = Random.nextInt(100)
+		val coinFlip = rnd.nextInt(100)
 		var okToInject : Boolean = false
 		if (coinFlip <= rate){
 			//if ((1.0 / cyclesSinceLastInjection(portNum)) <= rate ){
@@ -245,7 +244,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
         }else if(pattern == "Tornado"){
 		    dests(port)(iter)     = (TornadoDest(port)(0),TornadoDest(port)(1))  
         }else if(pattern == "Random"){
-		    dests(port)(iter)     = (Random.nextInt(c.K(0)), Random.nextInt(c.K(1)))
+		    dests(port)(iter)     = (rnd.nextInt(c.K(0)), rnd.nextInt(c.K(1)))
         }else{
 			println("ERROR: Unknown test type: " + pattern)
 		}
@@ -267,7 +266,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 	for(port <- 0 until c.numPorts){
 		scala.Predef.printf("port: %d\n", port)
 		
-        packetLength =  Random.nextInt(7)
+        packetLength =  rnd.nextInt(7)
         if(packetLength < 3){
             packetLength = 3
         }
@@ -435,7 +434,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 	channelStatStringCSV = ""	
 	for (r <- 0 until c.numRouters) {
 		var rb = peek(c.io.cyclesRouterBusy(r)) 
-		statString = "Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
+		statString = "CMC Router " + r + " Stats:\tCycles Busy: " + rb + "\tChannel Busy stats: "
 		routerStatStringCSV = routerStatStringCSV + (rb.toFloat/cycleCount)*100 + ","
 		scala.Predef.printf("%s\n",statString)
 		for(i <- 0 until c.routerRadix) {

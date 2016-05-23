@@ -3,7 +3,6 @@ package OpenSoC
 import Chisel._
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.LinkedHashMap
-import scala.util.Random
 
 //-------------------------------
 // Packet format

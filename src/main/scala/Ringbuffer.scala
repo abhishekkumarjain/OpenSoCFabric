@@ -2,7 +2,6 @@ package OpenSoC
 
 import Chisel._
 import scala.collection.mutable.HashMap
-import scala.util.Random
 
 class RingBuffer(parms: Parameters) extends Module(parms) {
 
@@ -29,9 +28,9 @@ class RingBuffer(parms: Parameters) extends Module(parms) {
 			val pushReady			= Bool( OUTPUT )
 	}
 	
-	val buffer 			= Reg(init = Vec(totalBufferEntries, UInt(0, width = bufferWidth)))
-	val bufferValids	= Reg(init = Vec(totalBufferEntries, Bool(false)))
-	val accessPointers	= Reg(init = Vec(pointerCount, UInt(0, width = log2Up(totalBufferEntries))))
+	val buffer 			= Reg(init = Vec.fill(totalBufferEntries)(UInt(0, width = bufferWidth)))
+	val bufferValids	= Reg(init = Vec.fill(totalBufferEntries)(Bool(false)))
+	val accessPointers	= Reg(init = Vec.fill(pointerCount)(UInt(0, width = log2Up(totalBufferEntries))))
 	val pushPointer		= Reg(init = UInt(0, width = log2Up(totalBufferEntries)) )	
 
 	val sel  	 		= accessPointers(0) =/= UInt(0)

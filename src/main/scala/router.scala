@@ -3,7 +3,6 @@ package OpenSoC
 import Chisel._
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.LinkedHashMap
-import scala.util.Random
 import Array._
 
 /*
@@ -452,7 +451,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
             		val assignedVC          = Reg(init=UInt(0, width = io.inChannels(0).flit.getWidth))
 
 			val flitPriority        = Reg(init=UInt(0, width=log2Up(numPriorityLevels)))
-			val priorityLevel       = UInt(width=log2Up(numPriorityLevels))
+			val priorityLevel       = Wire(UInt(width=log2Up(numPriorityLevels)))
 			priorityLevel          := UInt(0)
 
             val VCRouterState       = new VCRouterState

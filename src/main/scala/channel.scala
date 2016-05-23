@@ -44,7 +44,7 @@ class BodyFlit(parms: Parameters) extends FlitCommon(parms) {
 }
 
 class Flit(parms: Parameters) extends Bundle {
-	val union   = new BitUnion(Map("Head" -> new HeadFlit(parms), "Body" -> new BodyFlit(parms)))
+	val union   = new BitUnion(Map("Head" -> Wire(new HeadFlit(parms)), "Body" -> Wire(new BodyFlit(parms))))
 	val x       = Chisel.UInt(width = union.width)
 	val numVCs  = parms.get[Int]("numVCs")
 
@@ -57,7 +57,7 @@ class Flit(parms: Parameters) extends Bundle {
 	def isHead(dummy: Int = 0) : Bool = union.tagEquals("Head", x)
 	def isBody(dummy: Int = 0) : Bool = union.tagEquals("Body", x)
 	def isTail(dummy: Int = 0) : Bool = {
-		val tailBit = Bool()
+		val tailBit = Wire(Bool())
 		when (isHead()) {
 			tailBit := union.unpack[HeadFlit]("Head", x).isTail
 		} .otherwise {
@@ -66,7 +66,7 @@ class Flit(parms: Parameters) extends Bundle {
 		tailBit
 	}
 	def getVCPort(dummy: Int = 0) : UInt = {
-		val vcBits = UInt(width = log2Up(numVCs))
+		val vcBits = Wire(UInt(width = log2Up(numVCs)))
 		when (isHead()) {
 			vcBits := union.unpack[HeadFlit]("Head", x).vcPort
 		} .otherwise {
@@ -81,19 +81,19 @@ class Flit(parms: Parameters) extends Bundle {
 
 object Flit {
 	def head(h: HeadFlit) : Flit = {
-		val f = new Flit(h.parms)
+		val f = Wire(new Flit(h.parms))
 		f.x := f.union.pack("Head", h)
 		f
 	}
 
 	def body(b: BodyFlit) : Flit = {
-		val f = new Flit(b.parms)
+		val f = Wire(new Flit(b.parms))
 		f.x := f.union.pack("Body", b)
 		f
 	}
 
 	def fromBits(n: UInt, parms: Parameters) : Flit = {
-		val f = new Flit(parms)
+		val f = Wire(new Flit(parms))
 		f.x := n
 		f
 	}
@@ -113,15 +113,15 @@ class ChannelVC(parms: Parameters) extends Bundle {
 	val flitValid	= Bool(INPUT)
 	val credit  	= Vec(numVCs, new Credit() ) // Direction as Output in class def
 
-	override def cloneType = { new ChannelVC(parms).asInstanceOf[this.type] }
+  override def cloneType = { new ChannelVC(parms).asInstanceOf[this.type] }
 }
 
 class Channel(parms: Parameters) extends Bundle {
 	val flit		= new Flit(parms).asInput
 	val flitValid	= Bool(INPUT)
 	val credit		= new Credit() // Direction as Output in class def
-
-	override def cloneType = { new Channel(parms).asInstanceOf[this.type] }
+	
+  override def cloneType = { new Channel(parms).asInstanceOf[this.type] }
 }
 
 class ReplaceVCPort(parms: Parameters) extends Module(parms) {
@@ -133,14 +133,14 @@ class ReplaceVCPort(parms: Parameters) extends Module(parms) {
 		val newFlit     = new Flit(parms).asOutput
 	}
 
-	val h           = new HeadFlit(parms)
+	val h           = Wire(new HeadFlit(parms))
 	h.packetID      := io.oldFlit.asHead().packetID
 	h.isTail        := io.oldFlit.asHead().isTail
 	h.vcPort        := io.newVCPort
 	h.packetType    := io.oldFlit.asHead().packetType
 	h.destination.zipWithIndex.foreach{ case (e,i) => e := io.oldFlit.asHead().destination(i) }
 
-	val b           = new BodyFlit(parms)
+	val b           = Wire(new BodyFlit(parms))
 	b.packetID      := io.oldFlit.asBody().packetID
 	b.isTail        := io.oldFlit.asBody().isTail
 	b.vcPort        := io.newVCPort

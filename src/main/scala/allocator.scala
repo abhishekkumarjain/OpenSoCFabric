@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 /*
 abstract class AllocatorParams {

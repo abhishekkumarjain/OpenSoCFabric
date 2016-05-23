@@ -1,7 +1,6 @@
 package OpenSoC
 
 import Chisel._
-import scala.util.Random
 
 class Credit extends Bundle {
 	val grant = Bool(OUTPUT)
