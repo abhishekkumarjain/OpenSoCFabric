@@ -3,8 +3,7 @@ lazy val buildSettings = Seq (
     version := "1.1",
     name := "OpenSoC",
     scalaVersion := "2.11.7",
-    libraryDependencies += "edu.berkeley.cs" %% "firrtl" % "0.1-SNAPSHOT"
+    libraryDependencies += "edu.berkeley.cs" %% "firrtl" % "0.1-SNAPSHOT",
+    libraryDependencies += "edu.berkeley.cs" %% "chisel" % "2.3-SNAPSHOT"
 )
-lazy val root = (project in file(".")).settings(buildSettings: _*).dependsOn(chisel,chiselTesters)
-lazy val chisel = project in file("chisel3")
-lazy val chiselTesters = project in file("chisel-testers")
+lazy val root = (project in file(".")).settings(buildSettings: _*)
