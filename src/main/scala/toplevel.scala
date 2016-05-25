@@ -169,14 +169,14 @@ class OpenSoC_CMesh[T<: Data](parms: Parameters, tGen : Parameters => T) extends
 			inputNetIface.io.in.valid := io.ports(i).in.packetValid
 			io.ports(i).in.packetReady := inputNetIface.io.in.ready
 
-			injectionQ.io.in <> inputNetIface.io.out
+			inputNetIface.io.out <> injectionQ.io.in
 
 			// injectionQ.io.in.packet := io.ports(i).in.packet 
 			// injectionQ.io.in.packetValid := io.ports(i).in.packetValid
 			// io.ports(i).in.packetReady := injectionQ.io.in.packetReady
-			topology.io.inChannels(i) <> injectionQ.io.out
-			ejectionQ.io.in <> topology.io.outChannels(i)
-			io.ports(i).out <> ejectionQ.io.out
+			injectionQ.io.out <> topology.io.inChannels(i)
+			topology.io.outChannels(i) <> ejectionQ.io.in
+			ejectionQ.io.out <> io.ports(i).out
 		}
 	    for (r <- 0 until numRouters) {
 		    io.cyclesRouterBusy(r) := topology.io.cyclesRouterBusy(r)

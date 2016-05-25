@@ -136,7 +136,8 @@ class InjectionChannelQ(parms: Parameters) extends Module(parms) {
 	queue.io.enq.bits       <> io.in.flit
 	queue.io.enq.valid      := (UInt(queueDepth) - queue.io.count) > UInt(credThreshold) && io.in.flitValid
 	creditGen.io.inGrant    := queue.io.deq.ready && queue.io.deq.valid
-	creditGen.io.outCredit  <> io.in.credit
+	//creditGen.io.outCredit  <> io.in.credit
+	io.in.credit <> creditGen.io.outCredit
     //------------
 	
     // -- Output Credit Logic
@@ -173,7 +174,7 @@ class EjectionChannelQ(parms: Parameters) extends Module(parms) {
 
 	val queue = Chisel.Module( new Chisel.Queue(new Flit(parms), queueDepth*numVCs) ) // Hack to account for VC credits
 	
-	creditGens.zipWithIndex.foreach{ case (e,i) => e.io.outCredit <> io.in.credit(i) }
+	creditGens.zipWithIndex.foreach{ case (e,i) => io.in.credit(i) <> e.io.outCredit}
 	queue.io.enq.valid := io.in.flitValid//creditGens.map(_.io.outReady).reduceLeft( _ || _ )
 	creditGens.map(_.io.inGrant := queue.io.deq.ready && queue.io.deq.valid)
 	queue.io.enq.bits <> io.in.flit

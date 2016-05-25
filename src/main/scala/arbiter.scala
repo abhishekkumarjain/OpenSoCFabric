@@ -30,7 +30,7 @@ class ResourceIO extends Chisel.Bundle {
 abstract class Arbiter(parms: Parameters) extends Module(parms) {
 	val numReqs = parms.get[Int]("numReqs")
 	val io = new Bundle {
-		val requests = Vec(numReqs, { new RequestIO(parms) }.flip)
+		val requests = Vec(numReqs, { new RequestIO(parms) }).flip
 		val resource = new ResourceIO
 		val chosen = UInt(OUTPUT, Chisel.log2Up(numReqs))
 		}

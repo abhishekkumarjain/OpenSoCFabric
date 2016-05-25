@@ -1,7 +1,7 @@
 package OpenSoC
 
 import Chisel._
-//import Chisel.iotesters._
+import Chisel.iotesters._
 import scala.collection.mutable.MutableList
 	
 object OpenSoC {

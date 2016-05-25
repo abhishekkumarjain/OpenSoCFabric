@@ -43,7 +43,7 @@ abstract class Router(parms: Parameters) extends Module(parms) {
 	val numOutChannels 	= parms.get[Int]("numOutChannels")
 	val io = new Bundle {
 		val inChannels = Vec(numInChannels, new Channel(parms) )
-		val outChannels = Vec(numOutChannels, new Channel(parms).flip() )
+		val outChannels = Vec(numOutChannels, new Channel(parms) ).flip()
 		val counters = Vec(2, new CounterIO )
 	}
 }
@@ -55,7 +55,7 @@ abstract class VCRouter(parms: Parameters) extends Module(parms) {
 	
 	val io = new Bundle {
 		val inChannels = Vec(numInChannels, new ChannelVC(parms))
-		val outChannels = Vec(numOutChannels, new ChannelVC(parms).flip())
+		val outChannels = Vec(numOutChannels, new ChannelVC(parms)).flip
 		val counters = Vec(2, new CounterIO )
 	}
 }
@@ -478,7 +478,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
 
             // --------------------- 
 
-			creditGen.io.outCredit <> io.inChannels(curInChannel).credit(curInVC)
+			io.inChannels(curInChannel).credit(curInVC) <> creditGen.io.outCredit
 
             // ---- INPUT BUFFER LOGIC ----- 
 			val inChannelFlit                       = io.inChannels(curInChannel).flit

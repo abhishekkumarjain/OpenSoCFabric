@@ -22,7 +22,7 @@ class CreditBuffer(parms: Parameters) extends Module(parms){
     
     val io = new Bundle{
         val in  = Vec(routerRadix, new ChannelVC(parms) )
-        val out = Vec(routerRadix, new ChannelVC(parms).flip() )
+        val out = Vec(routerRadix, new ChannelVC(parms) ).flip() 
     }
 
     for (i <- 0 until routerRadix){
@@ -84,7 +84,7 @@ abstract class VCTopology(parms: Parameters) extends Module(parms) {
 	
 	val io = new Bundle {
 		val inChannels  		= Vec(numIOChannels, new ChannelVC(parms) )
-		val outChannels 		= Vec(numIOChannels, new ChannelVC(parms).flip() )
+		val outChannels 		= Vec(numIOChannels, new ChannelVC(parms) ).flip()
 		//	val cyclesRouterBusy	= Vec(numRouters, UInt(OUTPUT, width=counterMax.getWidth))
 		//	val cyclesChannelBusy	= Vec(numRouters*routerRadix, UInt(OUTPUT, width=counterMax.getWidth))
 		val cyclesRouterBusy	= Vec(128, UInt(OUTPUT, width=counterMax.getWidth))	//DDD: Hack! need to create a counter per router, not some magic number
@@ -337,9 +337,8 @@ class VCCMesh(parms: Parameters) extends VCTopology(parms) {
 			// This is the messy part. We need to connect the same channel to the router that has it as input. Depending on i, we have to fetch the router.
 			var consumerrouter = FindConsumerRouter(coord, i) 	// - C is contained here. The index refers to channels after the first C ones (the first indexed channels are I/E
 			if (consumerrouter != coord) { 						// If they are equal it means that there is no appropriate neighbor router.
-				//routermap(consumerrouter).io.inChannels(i) 	<> routermap(coord).io.outChannels(i) 
-				routermap(consumerrouter).io.inChannels(i) 	<> creditBufsMap(coord).io.out(i)
-                creditBufsMap(coord).io.in(i)                  <> routermap(coord).io.outChannels(i) 
+				creditBufsMap(coord).io.out(i) <> routermap(consumerrouter).io.inChannels(i)
+        routermap(coord).io.outChannels(i) <> creditBufsMap(coord).io.in(i)
 				busProbesMap(coord).io.inFlit(i) 			:= routermap(coord).io.outChannels(i).flit  
 				busProbesMap(coord).io.inValid(i) 			:= routermap(coord).io.outChannels(i).flitValid
 				busProbesMap(coord).io.routerCord 			:= UInt(consumerrouter.product)
@@ -358,11 +357,11 @@ class VCCMesh(parms: Parameters) extends VCTopology(parms) {
 		// We handle injection and ejection channels separately
 		for (p <- 0 until C) {
 			println("Connecting router ", coord, "port ", p, " to injection queue ", p+ (n*C))
-			routermap(coord).io.inChannels(p) 	<> io.inChannels(p + (n*C))
+			io.inChannels(p + (n*C)) <> routermap(coord).io.inChannels(p)
 			println("Settng ConnectionsMap for ", coord, " port ", p," to 1")
 			connectionsMap(coord)(p) = 1
 			println("Connecting router ", coord, "port ", p, " to ejection queue ", p+(n*C))
-			io.outChannels(p + (n*C)) 				<> routermap(coord).io.outChannels(p)
+			routermap(coord).io.outChannels(p) <> io.outChannels(p + (n*C))
 		}
 		coord 					= IncrementCoord(coord)
 		io.cyclesRouterBusy(n)	:= busProbesMap(coord).io.cyclesRouterBusy
@@ -378,8 +377,8 @@ class VCCMesh(parms: Parameters) extends VCTopology(parms) {
 												( "numInChannels"->Soft(routerRadix)),
 												( "numOutChannels"->Soft(routerRadix)) )) ) )
 				println("Null endpoint created")
-				routermap(consumerrouter).io.inChannels(i) <> NullEndpoint.io.outChannels(i)
-				NullEndpoint.io.inChannels(i) <> routermap(consumerrouter).io.outChannels(i)
+				NullEndpoint.io.outChannels(i) <> routermap(consumerrouter).io.inChannels(i)
+				routermap(consumerrouter).io.outChannels(i) <> NullEndpoint.io.inChannels(i)
 				connectionsMap(consumerrouter)(i) = 1
 			}
 		}

@@ -15,9 +15,9 @@ class Switch[T <: Data](val gen: T, parms: Parameters) extends Module(parms) {
 	val numInPorts 	= parms.get[Int]("numInPorts")
 	val numOutPorts	= parms.get[Int]("numOutPorts")
 	val io = new Bundle {
-		val inPorts = Vec(numInPorts, gen.cloneType.asInput)
-		val outPorts = Vec(numOutPorts, gen.cloneType.asOutput)
-		val sel = Vec(numOutPorts, {UInt(width = log2Up(numInPorts))}.asInput)
+		val inPorts = Vec(numInPorts, gen.cloneType).asInput
+		val outPorts = Vec(numOutPorts, gen.cloneType).asOutput
+		val sel = Vec(numOutPorts, {UInt(width = log2Up(numInPorts))}).asInput
 	}
 	for( i <- 0 until numOutPorts) {
 		var m = Chisel.Module (
@@ -34,7 +34,7 @@ class Switch[T <: Data](val gen: T, parms: Parameters) extends Module(parms) {
 class MuxN[T <: Data](val gen: T, parms: Parameters) extends Module(parms) {
 	val n = parms.get[Int]("n")
 	val io = new Bundle {
-		val ins = Vec(n, gen.cloneType.asInput)
+		val ins = Vec(n, gen.cloneType).asInput
 		val sel = UInt(INPUT, log2Up(n))
 		val out = gen.cloneType.asOutput
 	}
