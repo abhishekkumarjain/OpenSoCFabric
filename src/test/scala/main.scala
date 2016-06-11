@@ -334,7 +334,7 @@ object OpenSoC {
 														)
 													), (p)=>new Packet(p))
 												))
-			case "OpenSoC_CMesh_Flit"	=> (moduleToTest = () => Module(new OpenSoC_CMesh[Flit](
+			case "OpenSoC_CMesh_Flit"	=> (moduleToTest = () => new OpenSoC_CMesh[Flit](
 													parms.child("MyOpenSoC_CMesh", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -360,7 +360,7 @@ object OpenSoC {
 														("numPriorityLevels"->Hard(5))
 														)
 													), (p)=>new Flit(p))
-												))
+												)
 			case "OpenSoC_CMesh_Decoupled"	=> (moduleToTest = () => Module(new OpenSoC_CMesh_DecoupledWrapper(
 													parms.child("MyOpenSoC_CMesh", Map(
 														("TopologyDimension"->Hard(Dim)),

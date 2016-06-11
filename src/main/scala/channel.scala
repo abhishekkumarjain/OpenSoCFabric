@@ -44,7 +44,7 @@ class BodyFlit(parms: Parameters) extends FlitCommon(parms) {
 }
 
 class Flit(parms: Parameters) extends Bundle {
-	val union   = new BitUnion(Map("Head" -> Wire(new HeadFlit(parms)), "Body" -> Wire(new BodyFlit(parms))))
+	val union   = new BitUnion(Map("Head" -> new HeadFlit(parms), "Body" -> new BodyFlit(parms)))
 	val x       = Chisel.UInt(width = union.width)
 	val numVCs  = parms.get[Int]("numVCs")
 

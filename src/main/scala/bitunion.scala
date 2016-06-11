@@ -17,7 +17,7 @@ import Chisel._
 class BitUnion(tag2data: Map[String, Chisel.Data]) {
   
   private val codeWidth = log2Up(tag2data.size)
-  private val tailWidth = tag2data.values.map(_.toBits.getWidth).foldLeft(0)(math.max)
+  private val tailWidth = tag2data.values.map(_.getWidth).foldLeft(0)(math.max)
   private val tag2code = {
     val s = tag2data.keys.toArray.sorted
     Map(s zip s.indices:_*)
@@ -61,9 +61,9 @@ class BitUnion(tag2data: Map[String, Chisel.Data]) {
   }
 
   def unpack[T <: Chisel.Data](tag: String, x: Chisel.Bits) : T = {
-    val data = Wire(tag2data(tag).cloneType)
+    //val data = Wire(tag2data(tag).cloneType)
     // println("data getWidth: " + data.toBits.getWidth + "\twidth: " + data.width)
-    data.fromBits(x.apply(codeWidth+data.toBits.getWidth-1, codeWidth)).asInstanceOf[T]
+    tag2data(tag).fromBits(x.apply(codeWidth+tag2data(tag).getWidth-1, codeWidth)).asInstanceOf[T]
   }
   
   def whenTag[T <: Chisel.Data](tag: String, x: Chisel.Bits) (block: T => Unit) = {
