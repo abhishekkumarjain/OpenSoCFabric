@@ -1,7 +1,7 @@
 package OpenSoC
 
 import Chisel._
-//import Chisel.iotesters._
+import Chisel.iotesters._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.MutableList
@@ -9,8 +9,8 @@ import scala.collection.mutable.ArrayBuffer
 import java.io._
 
 //class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], b: Option[Backend] = None, parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c, _backend = b) {
-//class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c) {
-class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends Tester(c) {
+class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c) {
+//class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
 //	implicit def int(x: Int): BigInt = x
   //	implicit def int(x: Bits): BigInt = x.litValue()
