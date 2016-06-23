@@ -356,7 +356,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 				//var pID = (myFlit(0).toInt & 0x0001FE000) >> 13 //4x4
 				var pID = 	packetIDs(port)(iterationCountPerPort(port)).toInt 
 				packetInjTime(pID)= cycleCount
-				println("adding pid: ", pID)
+				println("adding pid: " + pID)
 			}
 			poke(c.io.ports(port).in.packetValid, 1)
 			poke(c.io.ports(port).in.packet, myFlit)
@@ -382,8 +382,8 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 		}
 	}
 		var min = iterationCountPerPort.min
-		println("iteratons remaining are: ", iterationCountPerPort(0), iterationCountPerPort(1), iterationCountPerPort(2), iterationCountPerPort(3)) 
-		println("min is: ", min) 
+		println(s"iteratons remaining are: ${iterationCountPerPort(0)}, ${iterationCountPerPort(1)}, ${iterationCountPerPort(2)}, ${iterationCountPerPort(3)}") 
+		println("min is: " + min) 
 
     val injQueueLatency = 2
 	for(port <- 0 until c.numPorts){
@@ -396,10 +396,10 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 				var portDest = PortToDest(port).toArray
 				//var packetID = peek(c.io.headFlitsOut(port))
                 if(peek(c.io.flitsOutAsBody(port).isTail).toInt > 0){
-				    println("Found tail flit", packetID)
+				    println("Found tail flit" + packetID)
     				if (packetInjTime.contains(packetID)){
 			    		var latency = cycleCount - packetInjTime(packetID) - injQueueLatency - 1 // subtract 1 becasue the flit actually arrived last cycle
-		    			println("Latency for packet ID ", packetID, " is: ", latency)
+		    			println(s"Latency for packet ID ${packetID} is: ${latency}")
 	    				latencyUtilFile.write(packetID + "," + latency + "\n")
     					if (packetMap(packetID).deep != portDest.deep){
 			    			println("HEAD Flit expected to be " + packetMap(packetID).deep.mkString + " Instead, found: " + portDest.deep.mkString)
