@@ -8,8 +8,8 @@ import scala.collection.mutable.MutableList
 import scala.collection.mutable.ArrayBuffer
 import java.io._
 
-class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], b: Option[Backend] = None, parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c, _backend = b) {
-//class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c) {
+//class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], b: Option[Backend] = None, parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c, _backend = b) {
+class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends PeekPokeTester(c) {
 //class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Parameters, rate: Double, pattern: String, packetCountPerPort : Int, fragmentationFactor : Int) extends Tester(c) {
 	implicit def bool2BigInt(b:Boolean) : BigInt = if (b) 1 else 0
 //	implicit def int(x: Int): BigInt = x
@@ -289,8 +289,8 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], b: Option[
 		//get head and body flits from extractor blocks, then add to array based on port & iteration#
 		var myHeadFlit = peek(c.io.headFlitsOut(port))
 		var myBodyFlit = peek(c.io.bodyFlitsOut(port))
-		flits(port)(iter)(0) = myHeadFlit
-		flits(port)(iter)(1) = myBodyFlit
+		flits(port)(iter)(0) = myHeadFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
+		flits(port)(iter)(1) = myBodyFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
     
         packetLengths(packetIDs(port)(iter).toInt) = packetLength
         // Create enough flits to fill out packet
@@ -307,7 +307,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], b: Option[
 
 		    //Add the tail flit to the array of flits
 		    myBodyFlit = peek(c.io.bodyFlitsOut(port))
-		    flits(port)(iter)(f+2) = myBodyFlit
+		    flits(port)(iter)(f+2) = myBodyFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
         }
 	  }
 	}	
