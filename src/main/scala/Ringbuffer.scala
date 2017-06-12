@@ -28,14 +28,14 @@ class RingBuffer(parms: Parameters) extends Module(parms) {
 			val pushReady			= Bool( OUTPUT )
 	}
 	
-	val buffer 			= Reg(init = Vec.fill(totalBufferEntries)(UInt(0, width = bufferWidth)))
-	val bufferValids	= Reg(init = Vec.fill(totalBufferEntries)(Bool(false)))
-	val accessPointers	= Reg(init = Vec.fill(pointerCount)(UInt(0, width = log2Up(totalBufferEntries))))
+	val buffer 			= Reg(init = Vec(Seq.fill(totalBufferEntries)(UInt(0, width = bufferWidth))))
+	val bufferValids	= Reg(init = Vec(Seq.fill(totalBufferEntries)(Bool(false))))
+	val accessPointers	= Reg(init = Vec(Seq.fill(pointerCount)(UInt(0, width = log2Up(totalBufferEntries)))))
 	val pushPointer		= Reg(init = UInt(0, width = log2Up(totalBufferEntries)) )	
 
 	val sel  	 		= accessPointers(0) =/= UInt(0)
-	val bufferEmpty 	= ~bufferValids.toBits.toUInt().orR
-	val pushReady		= ~bufferValids.toBits.toUInt().andR
+	val bufferEmpty 	= ~bufferValids.asUInt.orR
+	val pushReady		= ~bufferValids.asUInt.andR
 
 	io.pushReady 		:= pushReady
 	

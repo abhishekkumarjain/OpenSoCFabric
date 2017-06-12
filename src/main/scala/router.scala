@@ -635,7 +635,7 @@ class SimpleVCRouter(parms: Parameters) extends VCRouter(parms) {
         // ------------------- 
 
         //State Machine
-        routerOutputStateMgmt(i).io.swAllocGranted  := Vec (readyToXmit.map( a=> a(i))).toBits().toUInt().orR  //This should be routed from the input side
+        routerOutputStateMgmt(i).io.swAllocGranted  := Vec (readyToXmit.map( a=> a(i))).asUInt.orR  //This should be routed from the input side
         routerOutputStateMgmt(i).io.creditsAvail    := outCredits(deqVCPort) //&& ~almostOuts(deqVCPort)
         // ------------------- 
  

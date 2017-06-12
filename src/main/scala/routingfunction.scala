@@ -61,7 +61,7 @@ class CMeshDOR(parms: Parameters) extends RoutingFunction(parms) {
 	val C = parms.get[Int]("Concentration") // Processors (endpoints) per router.
 
 	val flitDest = io.inHeadFlit.destination
-	val dimResults = Vec.fill(Dim)(Wire(UInt(width=log2Up(numResources))))
+	val dimResults = Vec(Seq.fill(Dim)(Wire(UInt(width=log2Up(numResources)))))
 	// Now we examine the coordinates one by one
 	// CONVENTION: We assume the LSBs contain the destination in the first dimension (e.g., X), and so on.
 	for (i <- 0 until Dim) {

@@ -52,7 +52,7 @@ class OpenSoC_CMesh_DecoupledWrapper(parms: Parameters) extends Module(parms) {
         val outPorts    = Vec(numPorts, new DecoupledIO[Flit](new Flit(parms)) )
     }
     
-    val network = Chisel.Module( new OpenSoC_CMesh[Flit](parms, (parms: Parameters) => new Flit(parms)) )
+    val network = /* Chisel.Module */( new OpenSoC_CMesh[Flit](parms, (parms: Parameters) => new Flit(parms)) )
 
     for (port <- 0 until numPorts){
         network.io.ports(port).in.packetValid   := io.inPorts(port).valid 

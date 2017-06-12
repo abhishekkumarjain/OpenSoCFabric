@@ -4,7 +4,6 @@ import Chisel._
 import Chisel.iotesters._
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.HashMap
-import scala.collection.mutable.MutableList
 import scala.collection.mutable.ArrayBuffer
 import java.io._
 
@@ -20,27 +19,36 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 	// var headFlitMap = LinkedHashMap[String, BigInt]()
 	// var bodyFlitMap = LinkedHashMap[String, BigInt]()
 	// headFlitMap = LinkedHashMap( 	
+	// 				("packetID"		-> 0 ),
+	// 				("isTail"		  -> 0 ),
+	// 				("packetType"	-> 0 ),
+	// 				("vcPort"		  -> 0 ),
 	// 				("Dest_0" 		-> 0 ),
 	// 				("Dest_1" 		-> 0 ),
-	// 				("Dest_2"		-> 0 ),
-	// 				("packetType"	-> 0 ),
-	// 				("vcPort"		-> 0 ),
-	// 				("isTail"		-> 0 ),
-	// 				("packetID"		-> 0 ) )
-	var headFlitMap : LinkedHashMap[String, BigInt] = LinkedHashMap[String, BigInt]() ++ (
-		(0 to c.Dim).map(i => ("Dest_"+i.toString -> BigInt(0))) ++ List[(String, BigInt)](
-			("packetType"	-> BigInt(0) ),
-			("vcPort"		-> BigInt(0) ),
-			("isTail"		-> BigInt(0) ),
-			("packetID"		-> BigInt(0) ) )
+	// 				("Dest_2"		  -> 0 ),
+	// 				("priority"		-> 0 )
+	// )
+	var headFlitMap : LinkedHashMap[String, BigInt] = LinkedHashMap[String, BigInt]() ++
+		(
+			List[(String, BigInt)](
+				("packetID"		-> BigInt(0) ),
+				("isTail"		-> BigInt(0) ),
+				("vcPort"		-> BigInt(0) ),
+				("packetType"	-> BigInt(0) )
+			) ++
+		(0 to c.Dim).map(i => ("Dest_"+i.toString -> BigInt(0))) ++
+				List[(String, BigInt)](
+					("priority"	-> BigInt(0) )
+				)
 		)
 
 	var bodyFlitMap : LinkedHashMap[String, BigInt] = LinkedHashMap[String, BigInt]() ++ List[(String, BigInt)](
-					("payload"	-> BigInt(0) ),
-					("flitID"	-> BigInt(0) ),
-					("vcPort"	-> BigInt(0) ),
-					("isTail"	-> BigInt(0) ),
-					("packetID"	-> BigInt(0) ) )
+		("packetID"	-> BigInt(0) ),
+		("isTail"	-> BigInt(0) ),
+		("vcPort"	-> BigInt(0) ),
+		("flitID"	-> BigInt(0) ),
+		("payload"	-> BigInt(0) )
+	)
 	
 	poke(c.io.bodyFlitsIn(0), bodyFlitMap.values.toArray)
 
@@ -251,7 +259,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 			println("ERROR: Unknown test type: " + pattern)
 		}
 		packetIDs(port)(iter) = curID % 16384 
-		println(packetIDs(port)(iter) )
+		Predef.println(packetIDs(port)(iter) )
 		packetIDsInt(port)(iter) = UInt( curID % 16384)
 		curID += 1
 		packetMap((packetIDs(port)(iter)).toInt) = Array.fill(3)(0)
@@ -287,8 +295,8 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 
 		step(1)
 		//get head and body flits from extractor blocks, then add to array based on port & iteration#
-		var myHeadFlit = peek(c.io.headFlitsOut(port))
-		var myBodyFlit = peek(c.io.bodyFlitsOut(port))
+		var myHeadFlit = peek(c.io.headFlitsOut(port)).values
+		var myBodyFlit = peek(c.io.bodyFlitsOut(port)).values
 		flits(port)(iter)(0) = myHeadFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
 		flits(port)(iter)(1) = myBodyFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
     
@@ -306,7 +314,7 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 		    step(1)
 
 		    //Add the tail flit to the array of flits
-		    myBodyFlit = peek(c.io.bodyFlitsOut(port))
+		    myBodyFlit = peek(c.io.bodyFlitsOut(port)).values
 		    flits(port)(iter)(f+2) = myBodyFlit.foldLeft(Array[BigInt]()) { (result, x) => result :+ x }
         }
 	  }
@@ -416,7 +424,9 @@ class OpenSoC_CMesh_CombinedTester_VarInjRate(c: OpenSoC_CMesh[Flit], parms: Par
 			//determine if flit is tail, then translate it as appropriate 
 			var myFlit = peek(c.io.ports(port).out.flit)
 			//if((myFlit(0).toInt & (0x1 << 10)) > 0 ) {
-			if((myFlit(0).toInt & 0x1) > 0 ) {
+			val flitValues = myFlit.values.toArray
+			val flit0 = flitValues(0)
+			if((flit0.toInt & 0x1) > 0 ) {
 				isHead(port) = true
 			}else{
 				poke(c.io.flitsIn(port), myFlit)

@@ -43,11 +43,11 @@ class CreditCon(parms: Parameters) extends Module(parms) {
 	val credCount = Reg(init=UInt(numCreds, log2Up(numCreds)+1))
 	
 	when (credCount === UInt(numCreds)) {
-		credCount := credCount - io.inConsume.toUInt()
+		credCount := credCount - io.inConsume.asUInt
 	} .elsewhen ((credCount > UInt(threshold))) {// && (credCount < UInt(numCreds))) {
-		credCount := credCount + io.inCredit.grant.toUInt() - io.inConsume.toUInt()
+		credCount := credCount + io.inCredit.grant.asUInt - io.inConsume.asUInt
 	} .otherwise {
-		credCount := credCount + io.inCredit.grant.toUInt()
+		credCount := credCount + io.inCredit.grant.asUInt
 	}
 
     assert(credCount <= UInt(numCreds), "CreditCon: Exceeded max credits")

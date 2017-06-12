@@ -6,7 +6,7 @@ import scala.collection.mutable.MutableList
 	
 object OpenSoC {
     def main(args: Array[String]): Unit = {
-		val mySWargs = Array("--backend", "c", "--genHarness", "--compile", "--parallelMakeJobs", "-1", "--compileInitializationUnoptimized", "--lineLimitFunctions", "1024", "--minimumLinesPerFile", "32768", "--test", "--Wall", "--vcd", "--reportDims")//, "--debug", "--ioDebug")
+		val mySWargs = Array("--backend", "firrtl", "--genHarness", "--compile", "--parallelMakeJobs", "-1", "--compileInitializationUnoptimized", "--lineLimitFunctions", "1024", "--minimumLinesPerFile", "32768", "--test", "--Wall", "--vcd", "--reportDims")//, "--debug", "--ioDebug")
 		val myHWargs = Array("--backend", "v", "--genHarness", "--vcd")
 		val mySysCargs = Array("--backend", "sysc", "--genHarness", "--compile", "--parallelMakeJobs", "-1", "--compileInitializationUnoptimized", "--lineLimitFunctions", "1024", "--minimumLinesPerFile", "32768", "--test", "--Wall", "--vcd", "--reportDims")//, "--debug", "--ioDebug")
 		var parms = Parameters.empty
@@ -76,57 +76,57 @@ object OpenSoC {
 		}
 	
 		moduleName match {	
-			case "RingBuffer"	=>	(moduleToTest = () => Module(new RingBuffer(
+			case "RingBuffer"	=>	(moduleToTest = () => new RingBuffer(
 													parms.child("MyRingBuffer", Map(
 														("widthRingBuffer"->Soft(32)),
 														("pointerCount"->Soft(3)),
 														("totalRingBufferEntries"->Soft(16))
 														)
-													))	
-												))
-			case "MuxN"			=>	(moduleToTest = () => Module(new MuxN[UInt](UInt(width=32),
+													)
+			))
+			case "MuxN"			=>	(moduleToTest = () => new MuxN[UInt](UInt(width=32),
 													parms.child("MyMux", Map(
 														("n"->Soft(4))
 														)
-													))
-												))
-			case "Switch"		=>	(moduleToTest = ()  => Module(new Switch[UInt](UInt(width=32),
+													)
+			))
+			case "Switch"		=>	(moduleToTest = ()  => new Switch[UInt](UInt(width=32),
 													parms.child("MySwitch", Map(
 														("numInPorts"->Soft(8)),
 														("numOutPorts"->Soft(3))
 														)
-													))
-												))
-			case "RRArbiter"	=>	(moduleToTest = () =>  Module(new RRArbiter(
+													)
+			))
+			case "RRArbiter"	=>	(moduleToTest = () =>  new RRArbiter(
 													parms.child("MyRRArbiter", Map(
 														("numReqs"->Soft(8))
 														)
-													))
-												))
-			case "RRArbiterPriority" =>	(moduleToTest = () =>  Module(new RRArbiterPriority(
+													)
+			))
+			case "RRArbiterPriority" =>	(moduleToTest = () =>  new RRArbiterPriority(
 													parms.child("MyRRArbiterPriority", Map(
 														("numReqs"->Soft(8)),
 														("numPriorityLevels"->Hard(8))
 														)
-													))
-												))
-			case "SwitchAllocator"	=>	(moduleToTest = () => Module(new SwitchAllocator(
+													)
+			))
+			case "SwitchAllocator"	=>	(moduleToTest = () => new SwitchAllocator(
 													parms.child("MyAllocator", Map(
 														("numReqs"->Soft(4)),
 														("numRes"->Soft(3)),
 														("arbCtor"->Hard( (parms: Parameters) => new RRArbiter(parms) ))
 														)
-													))
-												))
-			case "RouterRegFile"	=>	(moduleToTest = () => Module(new RouterRegFile(
+													)
+			))
+			case "RouterRegFile"	=>	(moduleToTest = () => new RouterRegFile(
 													parms.child("MyRouterRegFile", Map(
 														("widthRegFile"->Soft(32)),
 														("depthRegFile"->Soft(16)),
 														("pipelineDepth"->Soft(1))
 														)
-													))
-												))
-			case "GenericChannelQ"	=>	(moduleToTest = () => Module(new GenericChannelQ(
+													)
+			))
+			case "GenericChannelQ"	=>	(moduleToTest = () => new GenericChannelQ(
 													parms.child("MyChannelQ", Map(
 														("queueDepth"->Soft(16)),
 		
@@ -140,10 +140,9 @@ object OpenSoC {
 														("flitIDWidth"->Hard(1)),
 														("numInputVCs"->Hard(2)),
 														("payloadWidth"->Hard(1))
-														)
 													))
-												))
-			case "PacketInjectionQ"	=>	(moduleToTest = () => Module(new PacketInjectionQ[Packet](
+			))
+			case "PacketInjectionQ"	=>	(moduleToTest = () => new PacketInjectionQ[Packet](
 													parms.child("MyChannelQ", Map(
 														("queueDepth"->Soft(16)),
 		
@@ -161,10 +160,9 @@ object OpenSoC {
 														("numVCs"->Soft(numVCs)),
 														("payloadWidth"->Hard(1)),
 														("Dim"->Hard(Dim))
-														)
-													), (p)=>new Packet(p))
-												))
-			case "VCIEChannelQ" =>	(moduleToTest = () => Module(new VCIEChannelQ(
+													)), (p)=>new Packet(p)
+			))
+			case "VCIEChannelQ" =>	(moduleToTest = () => new VCIEChannelQ(
 													parms.child("MyVCChannelQs", Map(
 														("queueDepth"->Soft(4)),
 
@@ -179,10 +177,9 @@ object OpenSoC {
 
 														("flitIDWidth"->Hard(1)),
 														("payloadWidth"->Hard(1))
-														)
 													))
-												))
-			case "InjectionChannelQ" =>	(moduleToTest = () => Module(new InjectionChannelQ(
+			))
+			case "InjectionChannelQ" =>	(moduleToTest = () => new InjectionChannelQ(
 													parms.child("MyChannelIQ", Map(
 														("queueDepth"->Soft(4)),
 
@@ -197,10 +194,9 @@ object OpenSoC {
 
 														("flitIDWidth"->Hard(1)),
 														("payloadWidth"->Hard(1))
-														)
 													))
-												))
-			case "PacketToFlit"	=>	(moduleToTest = () => Module(new PacketToFlit(
+			))
+			case "PacketToFlit"	=>	(moduleToTest = () => new PacketToFlit(
 													parms.child("MyPacketToFlit", Map(
 		
 														("packetMaxLength"->Hard(16)),
@@ -215,11 +211,9 @@ object OpenSoC {
 														("numVCs"->Hard(numVCs)),
 														("numInputVCs"->Hard(2)),
 														("Dim"->Hard(Dim))
-
-														)
 													))
-												))
-			case "BusProbe"	=>	(moduleToTest = () => Module(new BusProbe(
+			))
+			case "BusProbe"	=>	(moduleToTest = () => new BusProbe(
 													parms.child("BusProbe", Map(
 		
 														("packetMaxLength"->Hard(16)),
@@ -236,17 +230,14 @@ object OpenSoC {
 														("destCordDim"->Hard(3)),
 														("numVCs"->Hard(numVCs)),
 														("numInputVCs"->Hard(2))
-
-														)
 													))
-												))
-			case "CreditTester"	=> (moduleToTest = () => Module(new CreditTester(
+			))
+			case "CreditTester"	=> (moduleToTest = () => new CreditTester(
 													parms.child("MyCreditTester", Map(
 														("numCreds"->Hard(4))
-														)
 													))
-												))
-			case "CMeshDOR"		=> (moduleToTest = () => Module(new CMeshDOR(
+			))
+			case "CMeshDOR"		=> (moduleToTest = () => new CMeshDOR(
 													parms.child("MyCMDORTester", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -261,10 +252,9 @@ object OpenSoC {
 														("packetTypeWidth"->Hard(4)),
 														("destCordWidth"->Hard(Math.max(log2Up(K.max),log2Up(C)))),
 														("destCordDim"->Hard(Dim + 1))
-														)
 													))
-												))
-			case "CFlatBflyDOR"	=> (moduleToTest = () => Module(new CFlatBflyDOR(
+			))
+			case "CFlatBflyDOR"	=> (moduleToTest = () => new CFlatBflyDOR(
 													parms.child("MyCFBDORTester", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -279,10 +269,9 @@ object OpenSoC {
 														("packetTypeWidth"->Hard(4)),
 														("destCordWidth"->Hard(Math.max(log2Up(K.max),log2Up(C)))),
 														("destCordDim"->Hard(Dim + 1))
-														)
 													))
-												))
-			case "SimpleRouterTestWrapper"	=> (moduleToTest = () => Module(new SimpleRouterTestWrapper(
+			))
+			case "SimpleRouterTestWrapper"	=> (moduleToTest = () => new SimpleRouterTestWrapper(
 													parms.child("MySimpleRouter", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -307,10 +296,9 @@ object OpenSoC {
 
 														("flitIDWidth"->Hard(4)),
 														("payloadWidth"->Hard(16))
-														)
 													))
-												))
-			case "OpenSoC_CMesh"	=> (moduleToTest = () => Module(new OpenSoC_CMesh[Packet](
+			))
+			case "OpenSoC_CMesh"	=> (moduleToTest = () => new OpenSoC_CMesh[Packet](
 													parms.child("MyOpenSoC_CMesh", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -331,10 +319,9 @@ object OpenSoC {
 														("flitIDWidth"->Hard(4)),
 														("payloadWidth"->Hard(32)),
 														("InputFlitizer"->Soft((parms: Parameters) => new PacketToFlit(parms)))
-														)
-													), (p)=>new Packet(p))
-												))
-			case "OpenSoC_CMesh_Flit"	=> (moduleToTest = () => Module(new OpenSoC_CMesh[Flit](
+													)), (p)=>new Packet(p)
+			))
+			case "OpenSoC_CMesh_Flit"	=> (moduleToTest = () => new OpenSoC_CMesh[Flit](
 													parms.child("MyOpenSoC_CMesh", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -358,10 +345,9 @@ object OpenSoC {
 														("InputFlitizer"->Soft((parms: Parameters) => new FlitToFlit(parms))),
 														
 														("numPriorityLevels"->Hard(5))
-														)
-													), (p)=>new Flit(p))
-												))
-			case "OpenSoC_CMesh_Decoupled"	=> (moduleToTest = () => Module(new OpenSoC_CMesh_DecoupledWrapper(
+													)), (p)=>new Flit(p)
+			))
+			case "OpenSoC_CMesh_Decoupled"	=> (moduleToTest = () => new OpenSoC_CMesh_DecoupledWrapper(
 													parms.child("MyOpenSoC_CMesh", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -382,11 +368,10 @@ object OpenSoC {
 														("payloadWidth"->Hard(4)),
                                                         ("breadCrumbCount"->Soft(1)),
 														("InputFlitizer"->Soft((parms: Parameters) => new FlitToFlit(parms)))
-														)
-													)))
-                                                )
+													))
+			))
 
-			case "OpenSoC_CFlatBfly"	=> (moduleToTest = () => Module(new OpenSoC_CFlatBfly[Flit](
+			case "OpenSoC_CFlatBfly"	=> (moduleToTest = () => new OpenSoC_CFlatBfly[Flit](
 													parms.child("MyOpenSoC_CFlatBfly", Map(
 														("TopologyDimension"->Hard(Dim)),
 														("RoutersPerDim"->Hard(K)),
@@ -408,9 +393,8 @@ object OpenSoC {
 														("payloadWidth"->Hard(32)),
                                                         ("breadCrumbCount"->Soft(1)),
 														("InputFlitizer"->Soft((parms: Parameters) => new FlitToFlit(parms)))
-														)
-													), (p)=>new Flit(p) )
-												))
+													)), (p)=>new Flit(p)
+			))
 			case _	=> (scala.Predef.printf("Unknown Module Name: %s\n", moduleName) )
 		}
 

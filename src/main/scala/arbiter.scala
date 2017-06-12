@@ -41,7 +41,7 @@ abstract class Arbiter(parms: Parameters) extends Module(parms) {
 class RRArbiter(parms: Parameters) extends Arbiter(parms) {
 	val nextGrant = Chisel.Reg(init=UInt( (1 << (numReqs-1)) , width=numReqs))
 
-	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ).reverse )
+	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.asUInt ).reverse )
 
 	val passSelectL0 = Wire(UInt(width = numReqs + 1))
 	val passSelectL1 = Wire(UInt(width = numReqs))
@@ -92,10 +92,10 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
 	winGrant := UInt(1<<(numReqs-1))
 	
 //	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ))
-	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.toUInt() ).reverse )
+	val requestsBits = Cat( (0 until numReqs).map(io.requests(_).request.asUInt ).reverse )
 	
 	//val PArraySorted = Reg(init=Vec(numReqs, UInt(0,width=numReqs)))
-	val PArraySorted = Reg(init=Vec.fill(numPriorityLevels)(Vec.fill(numReqs)(UInt(0, width=1))))
+	val PArraySorted = Reg(init=Vec(Seq.fill(numPriorityLevels)(Vec(Seq.fill(numReqs)(UInt(0, width=1))))))
 
 	
 	val passSelectL0 = Wire(UInt(width = numReqs + 1))
@@ -137,10 +137,12 @@ class RRArbiterPriority(parms: Parameters) extends Arbiter(parms) {
   //  when(~io.resource.ready && ~lockRelease){
   //      winner := nextGrant
   //  }.otherwise {
-  
+  assert(Chisel.UIntToOH(nextGrantUInt) === nextGrant, s"ERROR: Chisel.UIntToOH($nextGrantUInt) =/= $nextGrant")
+	printf("nextGrant 0x%x, nextGrantUInt 0x%x\n", nextGrant, nextGrantUInt)
 	when (requestsBits.orR) {
     	/* Locking logic encapsulating Round Robin logic */
-    	when ( nextGrant(nextGrantUInt) && requestsBits(nextGrantUInt) && ~lockRelease ) {
+		  assert(nextGrantUInt < 10.U, s"$nextGrantUInt >= 10")
+			when ( nextGrant(nextGrantUInt) && requestsBits(nextGrantUInt) && ~lockRelease ) {
     		/* If Locked (i.e. request granted but still requesting)
     			make sure to keep granting to that port */
 		winGrant  := nextGrant

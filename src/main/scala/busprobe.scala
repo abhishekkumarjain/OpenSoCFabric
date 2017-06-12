@@ -10,8 +10,6 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 	val routerRadix = parms.get[Int]("routerRadix") //2 * Dim + C
 
 	val counterMax = UInt(32768)
-	val freeRunningCounter = Reg(init = UInt(0, width = counterMax.getWidth)) 
-	freeRunningCounter := Mux(freeRunningCounter === counterMax, UInt(0) , freeRunningCounter + UInt(1))
 
 	val io = new Bundle {
 		val inFlit 				= Vec(routerRadix, { new Flit(parms) }).asInput
@@ -23,10 +21,12 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		val cyclesRouterBusy	= UInt(OUTPUT,width = counterMax.getWidth) 
 	}
 
+	val freeRunningCounter = Reg(init = UInt(0, width = counterMax.getWidth))
+	freeRunningCounter := Mux(freeRunningCounter === counterMax, UInt(0) , freeRunningCounter + UInt(1))
 
-	val cyclesChannelBusy = Reg(init = Vec.fill(routerRadix)(UInt(0, width = counterMax.getWidth)))
+	val cyclesChannelBusy = Reg(init = Vec(Seq.fill(routerRadix)(UInt(0, width = counterMax.getWidth))))
 	val cyclesRouterBusy  = Reg(init = UInt(0, counterMax.getWidth)) 
-	var cyclesChannelBusyScoreboard = Reg(init = Vec.fill(routerRadix)(Bool(false)))
+	var cyclesChannelBusyScoreboard = Reg(init = Vec(Seq.fill(routerRadix)(Bool(false))))
 
 	
     assert((UInt(routerRadix) > UInt(1)), "BusProbe: RouterRadix must be > 1")	
@@ -43,7 +43,7 @@ class BusProbe(parms : Parameters) extends Module(parms) {
 		io.cyclesChannelBusy(c) := cyclesChannelBusy(c)
 	}
 	
-	when (cyclesChannelBusyScoreboard.toBits().toUInt().orR ){
+	when (cyclesChannelBusyScoreboard.asUInt.orR ){
 		cyclesRouterBusy := cyclesRouterBusy + UInt(1)
 	}
 	io.cyclesRouterBusy := cyclesRouterBusy
